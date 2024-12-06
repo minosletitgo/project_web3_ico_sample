@@ -1,17 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-interface IERC20 {
-    function totalSupply() external view returns (uint256);
-    function balanceOf(address account) external view returns (uint256);
-    function transfer(address to, uint256 value) external returns (bool);
-    function transferFrom(address from, address to, uint256 value) external returns (bool);
-    function approve(address to, uint256 value) external returns (bool);
-    function allowance(address from, address to) external view returns (uint256);
-
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed from, address indexed to, uint256 value);
-}
+import "../../contracts_openzeppelin/token/ERC20/IERC20.sol";
 
 contract MaoMao is IERC20 {
     string private _name;
