@@ -1,0 +1,7 @@
+
+/artifacts
+/abi
+/cache
+.env
+/node_modules
+/logs
