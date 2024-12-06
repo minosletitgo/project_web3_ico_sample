@@ -4,6 +4,17 @@ require("hardhat-gas-reporter")
 require('hardhat-abi-exporter');
 require("dotenv").config();
 
+// // 执行verify验证合约命令的时候，打开下面代码！
+// {
+//   // 引入所需的模块
+//   const { ProxyAgent, setGlobalDispatcher } = require('undici');
+
+//   // 创建并设置全局代理
+//   const proxyAgent = new ProxyAgent('http://127.0.0.1:7890');
+//   setGlobalDispatcher(proxyAgent);
+// }
+
+
 module.exports = {
   solidity: {
     version: "0.8.24",
