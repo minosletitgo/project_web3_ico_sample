@@ -8,7 +8,7 @@ async function main() {
   const MyMaoMao = await ethers.getContractFactory("MaoMao", {
     contractPath: "./contracts/MaoMao.sol",
   });
-  const myMaoMao = await MyMaoMao.deploy("MyMaoMao", "MaoMao", 1);
+  const myMaoMao = await MyMaoMao.deploy("MyMaoMao", "MaoMao", 10**9);
   await myMaoMao.deployed();
 
   logger.info(`MaoMao deployed to (address): ${myMaoMao.address}`);
@@ -21,5 +21,7 @@ main()
     process.exit(1);
   });
 
-  // npx hardhat run .\scripts\deploy_MaoMao.js --network localHardhat
-  // 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
+  /*
+      npx hardhat run .\scripts\deploy_MaoMao.js --network localHardhat
+      0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
+  */ 

@@ -60,4 +60,7 @@ module.exports = {
     clear: true,    // 每次生成时清空输出目录
     flat: false,     // 是否将所有 ABI 写入一个文件
   },  
+  mocha: {
+    reporter: 'dot', // 这里指定了Mocha的reporter
+  },  
 };

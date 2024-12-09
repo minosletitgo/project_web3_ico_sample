@@ -23,7 +23,7 @@ main()
 
   /*
     npx hardhat run .\scripts\deploy_USDT.js --network localHardhat
-    0x59b670e9fA9D0A427751Af201D676719a970857b
+    0x5FbDB2315678afecb367f032d93F642f64180aa3
 
     npx hardhat run .\scripts\deploy_USDT.js --network sepolia
     0x9d9b2302AedC3e48ba6c70Ce052F31Df9ce9999C    

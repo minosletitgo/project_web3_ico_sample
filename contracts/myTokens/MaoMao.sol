@@ -6,7 +6,7 @@ import "../../contracts_openzeppelin/token/ERC20/IERC20.sol";
 contract MaoMao is IERC20 {
     string private _name;
     string private _symbol;
-    uint8 constant private _decimal = 9;
+    uint8 constant private _decimal = 18;
     uint256 private _totalSupply;
     mapping(address => uint256) _balanceOf;
     mapping(address => mapping(address => uint256)) _allowance;
