@@ -36,14 +36,17 @@ contract TokenLock {
         _;
     }    
 
+    // 添加权限管理员
     function addAuthorizedAddress(address addr) external onlyOwner {
         _authorizedAddresses[addr] = true;
     }
 
+    // 移除权限管理员
     function removeAuthorizedAddress(address addr) external onlyOwner {
         _authorizedAddresses[addr] = false;
     }    
 
+    // 筹款合约发起"锁仓代币"
     function lockTokens(address user, uint256 amount, uint256 releaseTime) external onlyAuthorized {
         require(releaseTime > block.timestamp, "lockTokens : releaseTime > block.timestamp");
         require(amount > 0, "lockTokens : amount > 0");
@@ -60,6 +63,7 @@ contract TokenLock {
         emit TokensLocked(user, amount, releaseTime);
     }
 
+    // 用户发起"释放锁仓，即取回代币"
     function releaseTokens() external {
         LockInfo memory lockInfo = _lockedTokens[msg.sender];
         require(lockInfo.amount > 0, "No locked tokens");
