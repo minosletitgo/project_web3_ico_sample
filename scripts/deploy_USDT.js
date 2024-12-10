@@ -1,5 +1,5 @@
 const { ethers } = require("hardhat");
-const logger = require('../srcs/logger');
+const logger = require('./tools/logger');
 
 async function main() {
   const [deployer] = await ethers.getSigners();

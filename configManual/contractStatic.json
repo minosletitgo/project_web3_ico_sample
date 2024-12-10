@@ -1,0 +1,12 @@
+{
+  "contract_OfferingCoin": {
+    "name": "MaoMao",
+    "fileName": "MaoMao.sol",
+    "desc": "MaoMao代币，模拟项目方即将发行的代币"
+  },
+  "contract_payCoin": {
+    "name": "USDT",
+    "fileName": "USDT.sol",
+    "desc": "USDT代币，模拟投资者支付的代币"
+  }
+}

@@ -1,6 +1,6 @@
 const { BigNumber } = require("ethers");
 const hre = require("hardhat");
-const logger = require("../srcs/logger");
+const logger = require("../scripts/tools/logger");
 const contractABI = require("../abi/contracts/myTokens/USDT.sol/USDT.json");
 require("dotenv").config();
 

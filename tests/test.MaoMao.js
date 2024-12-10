@@ -1,5 +1,5 @@
 const hre = require("hardhat");
-const logger = require("../srcs/logger");
+const logger = require("../scripts/tools/logger");
 const contractABI = require("../abi/contracts/myTokens/MaoMao.sol/MaoMao.json");
 require("dotenv").config();
 
