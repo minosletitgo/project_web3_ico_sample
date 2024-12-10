@@ -2,8 +2,9 @@
 pragma solidity ^0.8.20;
 
 import "../../contracts_openzeppelin/token/ERC20/IERC20.sol";
+import "../../contracts_openzeppelin/access/Ownable.sol";
 
-contract GouGou is IERC20 {
+contract GouGou is IERC20, Ownable {
     string public _name;
     string public _symbol;
     uint8 public _decimal;
@@ -11,12 +12,17 @@ contract GouGou is IERC20 {
     mapping(address => uint256) _balanceOf;
     mapping(address => mapping(address => uint256)) _allowance;
 
-    constructor(string memory name, string memory symbol, uint256 initSupply, uint8 decimal) {
+    constructor(
+        string memory name,
+        string memory symbol,
+        uint256 initSupply,
+        uint8 decimal
+    ) Ownable(msg.sender) {
         _name = name;
         _symbol = symbol;
         _decimal = decimal;
         _totalSupply = initSupply;
-        
+
         // 固定总供应量，直接给管理员
         _balanceOf[msg.sender] = _totalSupply;
 
@@ -26,30 +32,45 @@ contract GouGou is IERC20 {
     }
 
     function totalSupply() external view override returns (uint256) {
-        return  _totalSupply;
+        return _totalSupply;
     }
 
-    function balanceOf(address account) external view override returns (uint256) {
+    function balanceOf(
+        address account
+    ) external view override returns (uint256) {
         require(account != address(0), "account != address(0)");
         return _balanceOf[account];
     }
 
-    function transfer(address to, uint256 value) external override returns (bool) {
+    function transfer(
+        address to,
+        uint256 value
+    ) external override returns (bool) {
         require(to != address(0), "to != address(0)");
-        require(_balanceOf[msg.sender] >= value, "_balanceOf[msg.sender] >= value");
+        require(
+            _balanceOf[msg.sender] >= value,
+            "_balanceOf[msg.sender] >= value"
+        );
 
         _balanceOf[msg.sender] -= value;
         _balanceOf[to] += value;
 
         emit Transfer(msg.sender, to, value);
         return true;
-    }   
+    }
 
-    function transferFrom(address from, address to, uint256 value) external override returns (bool) {
+    function transferFrom(
+        address from,
+        address to,
+        uint256 value
+    ) external override returns (bool) {
         require(from != address(0), "from != address(0)");
         require(to != address(0), "to != address(0)");
         require(_balanceOf[from] >= value, "_balanceOf[from] >= value");
-        require(_allowance[from][msg.sender] >= value, "_allowance[from][msg.sender] >= value");
+        require(
+            _allowance[from][msg.sender] >= value,
+            "_allowance[from][msg.sender] >= value"
+        );
 
         _allowance[from][msg.sender] -= value;
         _balanceOf[from] -= value;
@@ -58,8 +79,11 @@ contract GouGou is IERC20 {
         emit Transfer(from, to, value);
         return true;
     }
-    
-    function approve(address to, uint256 value) external override returns (bool) {
+
+    function approve(
+        address to,
+        uint256 value
+    ) external override returns (bool) {
         require(to != address(0), "to != address(0)");
         //注意：为最大限度的放开授权行为，无需检查余额。
         //require(_balanceOf[msg.sender] >= value, "_balanceOf[msg.sender] >= value");
@@ -68,9 +92,12 @@ contract GouGou is IERC20 {
 
         emit Approval(msg.sender, to, value);
         return true;
-    }   
+    }
 
-    function allowance(address from, address to) external view override returns (uint256) {
+    function allowance(
+        address from,
+        address to
+    ) external view override returns (uint256) {
         return _allowance[from][to];
-    }   
+    }
 }
