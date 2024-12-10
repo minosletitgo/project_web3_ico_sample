@@ -5,7 +5,7 @@ import "../contracts_openzeppelin/token/ERC20/IERC20.sol";
 
 contract TokenLock {
     address public _owner;
-    IERC20 public _tokenMaoMao;  // 待销售的猫猫币
+    IERC20 public _tokenOffering;  // 待销售的代币
     
     mapping(address => bool) public _authorizedAddresses;    
 
@@ -19,11 +19,11 @@ contract TokenLock {
     event TokensLocked(address indexed user, uint256 amount, uint256 releaseTime);
     event TokensReleased(address indexed user, uint256 amount);
 
-    constructor(address tokenMaoMaoAddress) {
+    constructor(address tokenOfferingAddress) {
         _owner = msg.sender;
 
-        require(tokenMaoMaoAddress != address(0), "tokenMaoMaoAddress != address(0)");
-        _tokenMaoMao = IERC20(tokenMaoMaoAddress);
+        require(tokenOfferingAddress != address(0), "tokenOfferingAddress != address(0)");
+        _tokenOffering = IERC20(tokenOfferingAddress);
     }
 
     modifier onlyOwner() {
@@ -52,7 +52,7 @@ contract TokenLock {
         require(amount > 0, "lockTokens : amount > 0");
 
         // 将代币转移到锁仓合约
-        _tokenMaoMao.transfer(address(this), amount);
+        _tokenOffering.transfer(address(this), amount);
 
         // 更新锁仓信息
         _lockedTokens[user] = LockInfo({
@@ -75,7 +75,7 @@ contract TokenLock {
         delete _lockedTokens[msg.sender];
 
         // 将代币转移给用户
-        _tokenMaoMao.transfer(msg.sender, amount);
+        _tokenOffering.transfer(msg.sender, amount);
 
         emit TokensReleased(msg.sender, amount);
     }

@@ -20,23 +20,23 @@ import "../contracts_openzeppelin/token/ERC20/IERC20.sol";
 
 contract Fundraising {
     address public _owner;
-    address public _ownerTokenMaoMao;
+    address public _ownerOfTokenOffering;
     IERC20 public _tokenUSDT;    // 使用模拟美元代币(原生以太币的获取太麻烦)
-    IERC20 public _tokenMaoMao;  // 待销售的猫猫币
+    IERC20 public _tokenOffering;  // 待销售的代币
 
     enum SaleState { 
         NotStarted, // 未开始
         Presale,    // 预售期
         PublicSale, // 公开售卖期
         LockToken,  // 锁仓期
-        Ended           // 正常结束
+        Ended       // 正常结束
     }
 
     uint256 public _softCap;     //软顶：筹集的最小资金目标
     uint256 public _hardCap;     //硬顶：筹集的最大资金目标
 
-    uint256 public _presaleRate;  // 预售期的代币价格(如，1个USTD 兑换 25个猫猫币)
-    uint256 public _publicSaleRate; // 公开售卖期的代币价格(如，1个USTD 兑换 20个猫猫币)
+    uint256 public _presaleRate;  // 预售期的代币价格(如，1个USTD 兑换 25个发行代币)
+    uint256 public _publicSaleRate; // 公开售卖期的代币价格(如，1个USTD 兑换 20个发行代币)
 
     uint256 public _presaleStartTimeStamp;  // 预售期开始时间戳
     uint256 public _presaleDurationSeconds; // 预售期持续时长(秒)
@@ -65,8 +65,8 @@ contract Fundraising {
 
     constructor(
         address tokenUSDTAddress,
-        address tokenMaoMaoAddress,
-        address ownerTokenMaoMao,
+        address tokenOfferingAddress,
+        address ownerOfTokenOffering,
         uint256 softCap,
         uint256 hardCap,
         uint256 presaleRate,
@@ -81,13 +81,13 @@ contract Fundraising {
         require(tokenUSDTAddress != address(0), "tokenUSDTAddress != address(0)");
         _tokenUSDT = IERC20(tokenUSDTAddress);
 
-        require(tokenMaoMaoAddress != address(0), "tokenMaoMaoAddress != address(0)");
-        _tokenMaoMao = IERC20(tokenMaoMaoAddress);
+        require(tokenOfferingAddress != address(0), "tokenOfferingAddress != address(0)");
+        _tokenOffering = IERC20(tokenOfferingAddress);
 
-        require(ownerTokenMaoMao != address(0), "ownerTokenMaoMao != address(0)");
-        _ownerTokenMaoMao = ownerTokenMaoMao;
+        require(ownerOfTokenOffering != address(0), "ownerOfTokenOffering != address(0)");
+        _ownerOfTokenOffering = ownerOfTokenOffering;
 
-        require(_tokenMaoMao.balanceOf(_ownerTokenMaoMao) > 0, "_tokenMaoMao.balanceOf(_ownerTokenMaoMao) > 0");        
+        require(_tokenOffering.balanceOf(_ownerOfTokenOffering) > 0, "_tokenOffering.balanceOf(_ownerOfTokenOffering) > 0");        
 
         _softCap = softCap;
         _hardCap = hardCap;
@@ -151,13 +151,13 @@ contract Fundraising {
         }
 
         // 确保本合约有足额的MMC，可供分配
-        require(_tokenMaoMao.allowance(_ownerTokenMaoMao, address(this)) > tokensToTransfer, "_ownerTokenMaoMao, address(this)) > tokensToTransfer");
+        require(_tokenOffering.allowance(_ownerOfTokenOffering, address(this)) > tokensToTransfer, "_ownerOfTokenOffering, address(this)) > tokensToTransfer");
         
         // 把USDT转入本合约
         _tokenUSDT.transferFrom(msg.sender, address(this), amount);
 
         // 把用户购入的MMC，转入到锁仓合约
-        //_tokenMaoMao.transferFrom();
+        //_tokenOffering.transferFrom();
 
         _contributions[msg.sender] += amount;
         _tokensPurchased[msg.sender] += tokensToTransfer;
@@ -211,7 +211,7 @@ contract Fundraising {
     }
 
     // 查询"外部管理员授权给本合约的代币额度"
-    function getMaoMaoCoinAllowance() external view returns (uint256) {
-        return _tokenMaoMao.allowance(_ownerTokenMaoMao, address(this));
+    function getOfferingCoinAllowance() external view returns (uint256) {
+        return _tokenOffering.allowance(_ownerOfTokenOffering, address(this));
     }
 }
