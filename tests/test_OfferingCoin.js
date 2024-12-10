@@ -3,25 +3,25 @@ require("dotenv").config();
 // 日志管理器
 const logger = require("../scripts/tools/logger");
 // 配置读取器
-const configReader = require("../scripts/tools/configReader");
+const { loadContractParams_02 } = require("../scripts/tools/configReader");
 // 合约部署助手
-const contractDeployer = require("../scripts/tools/contractDeployer");
+const { readSavedContractAddress_02 } = require("../scripts/tools/contractDeployer");
+// ABI读取器
+const { loadABI } = require("../scripts/tools/contractABILoader");
 
 describe(" ", function () {
   // 获取全局配置
-  const config_Params = configReader.loadContractParams()[hre.network.name];
+  const config_Params = loadContractParams_02();
 
   let contract;
 
   before(async function () {
     const [signer] = await ethers.getSigners();
     contract = new hre.ethers.Contract(
-      contractDeployer.readSavedContractAddress(
-        hre.network.name,
+      readSavedContractAddress_02(
         config_Params["offeringCoin_ContractName"]
       ),
-      contractDeployer.readSavedContractABI(
-        hre.network.name,
+      loadABI(
         config_Params["offeringCoin_ContractName"]
       ),
       signer

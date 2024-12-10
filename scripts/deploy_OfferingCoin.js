@@ -2,9 +2,9 @@ const { ethers } = require("hardhat");
 // 日志管理器
 const logger = require("./tools/logger");
 // 配置读取器
-const configReader = require("./tools/configReader");
+const { loadContractParams_02 } = require("./tools/configReader");
 // 合约部署助手
-const contractDeployer = require("./tools/contractDeployer");
+const { saveContractAddress_02 } = require("./tools/contractDeployer");
 
 async function main() {
   // 获取部署者
@@ -12,13 +12,14 @@ async function main() {
   logger.info(`Deploying contracts with the account: ${deployer.address}`);
 
   // 获取全局配置
-  const config_Params = configReader.loadContractParams()[hre.network.name];
+  const config_Params = loadContractParams_02();
 
   // 获取"新发行代币"的合约工厂
   const OfferingCoinFactory = await ethers.getContractFactory(
     config_Params["offeringCoin_ContractName"],
     {
-      contractPath: "./contracts/" + config_Params["offeringCoin_ContractFileName"],
+      contractPath:
+        "./contracts/" + config_Params["offeringCoin_ContractFileName"],
     }
   );
 
@@ -32,8 +33,7 @@ async function main() {
   await offeringCoin.deployed();
 
   // 保存合约地址
-  contractDeployer.saveContractAddress(
-    hre.network.name,
+  saveContractAddress_02(
     config_Params["offeringCoin_ContractName"],
     offeringCoin.address
   );

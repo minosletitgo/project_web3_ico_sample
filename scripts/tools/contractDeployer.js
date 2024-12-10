@@ -1,5 +1,5 @@
 // contractDeployer.js
-
+const hre = require("hardhat");
 const fs = require("fs");
 const path = require("path");
 
@@ -85,8 +85,24 @@ function saveContractAddress(networkName, contractName, address) {
   writeAddresses(addresses);
 }
 
+function saveContractAddress_02(contractName, address) {
+  let networkName = hre.network.name;
+  let addresses = readAddresses();
+  if (!addresses[networkName]) {
+    addresses[networkName] = {};
+  }
+  addresses[networkName][contractName] = address;
+  writeAddresses(addresses);
+}
+
 // 读取合约地址
 function readSavedContractAddress(networkName, contractName) {
+  const addresses = readAddresses();
+  return addresses[networkName] && addresses[networkName][contractName];
+}
+
+function readSavedContractAddress_02(contractName) {
+  let networkName = hre.network.name;
   const addresses = readAddresses();
   return addresses[networkName] && addresses[networkName][contractName];
 }
@@ -101,8 +117,24 @@ function saveContractABI(networkName, contractName, abi) {
   writeABIs(abis);
 }
 
+function saveContractABI_02(contractName, abi) {
+  let networkName = hre.network.name;
+  let abis = readABIs();
+  if (!abis[networkName]) {
+    abis[networkName] = {};
+  }
+  abis[networkName][contractName] = abi;
+  writeABIs(abis);
+}
+
 // 读取合约ABI
 function readSavedContractABI(networkName, contractName) {
+  const abis = readABIs();
+  return abis[networkName] && abis[networkName][contractName];
+}
+
+function readSavedContractABI_02(contractName) {
+  let networkName = hre.network.name;
   const abis = readABIs();
   return abis[networkName] && abis[networkName][contractName];
 }
@@ -114,7 +146,11 @@ initABIFile();
 // 导出函数以供外界调用
 module.exports = {
   saveContractAddress,
+  saveContractAddress_02,
   readSavedContractAddress,
+  readSavedContractAddress_02,
   saveContractABI,
+  saveContractABI_02,
   readSavedContractABI,
+  readSavedContractABI_02,
 };
