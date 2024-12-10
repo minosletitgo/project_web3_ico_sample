@@ -4,18 +4,19 @@ pragma solidity ^0.8.20;
 import "../../contracts_openzeppelin/token/ERC20/IERC20.sol";
 
 contract MaoMao is IERC20 {
-    string private _name;
-    string private _symbol;
-    uint8 constant private _decimal = 18;
-    uint256 private _totalSupply;
+    string public _name;
+    string public _symbol;
+    uint8 public _decimal;
+    uint256 public _totalSupply;
     mapping(address => uint256) _balanceOf;
     mapping(address => mapping(address => uint256)) _allowance;
 
-    constructor(string memory name, string memory symbol, uint256 initSupply) {
+    constructor(string memory name, string memory symbol, uint256 initSupply, uint8 decimal) {
         _name = name;
         _symbol = symbol;
-        _totalSupply = initSupply * 10 ** _decimal;
-
+        _decimal = decimal;
+        _totalSupply = initSupply;
+        
         // 固定总供应量，直接给管理员
         _balanceOf[msg.sender] = _totalSupply;
 

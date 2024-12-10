@@ -1,7 +1,8 @@
 {
     "localHardhat": {
-      "offeringCoinName": "MaoMao",
-      "offeringCoinSymbol": "MMT",
-      "offeringCoinTotalSupply": 1e9
+        "offeringCoin_Name": "MaoMao",
+        "offeringCoin_Symbol": "MMT",
+        "offeringCoin_TotalSupply": 1e9,
+        "offeringCoin_Decimals": 18
     }
-  }
+}
