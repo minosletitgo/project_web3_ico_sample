@@ -30,7 +30,28 @@ module.exports = {
     localHardhat: {
       url: "http://127.0.0.1:8545",
       chainId: 31337,
-      accounts: [process.env.PRIVATE_KEY_localHardhat],
+      accounts: [
+        process.env.PRIVATE_KEY_localHardhat_0,
+        process.env.PRIVATE_KEY_localHardhat_1,
+        process.env.PRIVATE_KEY_localHardhat_2,
+        process.env.PRIVATE_KEY_localHardhat_3,
+        process.env.PRIVATE_KEY_localHardhat_4,
+        process.env.PRIVATE_KEY_localHardhat_5,
+        process.env.PRIVATE_KEY_localHardhat_6,
+        process.env.PRIVATE_KEY_localHardhat_7,
+        process.env.PRIVATE_KEY_localHardhat_8,
+        process.env.PRIVATE_KEY_localHardhat_9,
+        process.env.PRIVATE_KEY_localHardhat_10,
+        process.env.PRIVATE_KEY_localHardhat_11,
+        process.env.PRIVATE_KEY_localHardhat_12,
+        process.env.PRIVATE_KEY_localHardhat_13,
+        process.env.PRIVATE_KEY_localHardhat_14,
+        process.env.PRIVATE_KEY_localHardhat_15,
+        process.env.PRIVATE_KEY_localHardhat_16,
+        process.env.PRIVATE_KEY_localHardhat_17,
+        process.env.PRIVATE_KEY_localHardhat_18,
+        process.env.PRIVATE_KEY_localHardhat_19
+      ],
       loggingEnabled: true, // 启用日志记录
     },
     sepolia: {

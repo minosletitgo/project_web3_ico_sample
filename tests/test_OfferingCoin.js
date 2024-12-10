@@ -1,44 +1,43 @@
 const hre = require("hardhat");
 require("dotenv").config();
-// 日志管理器
 const logger = require("../scripts/tools/logger");
-// 配置读取器
-const { loadContractParams_02 } = require("../scripts/tools/configReader");
-// 合约部署助手
-const { readSavedContractAddress_02 } = require("../scripts/tools/contractDeployer");
-// ABI读取器
+const { loadContractParams } = require("../scripts/tools/configReader");
+const {
+  readSavedContractAddress,
+} = require("../scripts/tools/contractAddressLoader");
 const { loadABI } = require("../scripts/tools/contractABILoader");
 
 describe(" ", function () {
   // 获取全局配置
-  const config_Params = loadContractParams_02();
+  const config_Params = loadContractParams();
 
   let contract;
 
   before(async function () {
     const [signer] = await ethers.getSigners();
     contract = new hre.ethers.Contract(
-      readSavedContractAddress_02(
-        config_Params["offeringCoin_ContractName"]
-      ),
-      loadABI(
-        config_Params["offeringCoin_ContractName"]
-      ),
+      readSavedContractAddress(config_Params["offeringCoin_ContractName"]),
+      loadABI(config_Params["offeringCoin_ContractName"]),
       signer
     );
   });
 
   it(" ", async function () {
-    // // 查询代币管理员的地址
-    // const ownerAddress = await contract.owner();
-    // logger.info(`ownerAddress -> ${ownerAddress}`);
+    // 查询代币管理员的地址
+    const ownerAddress = await contract.owner();
+    logger.info(`ownerAddress -> ${ownerAddress}`);
 
-    // 查询指定地址的代币数额
-    const balanceOfAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-    const balanceOf = await contract.balanceOf(balanceOfAddress);
-    logger.info(
-      `${hre.network.name} -> ${balanceOfAddress} -> ${config_Params["offeringCoin_Name"]}: ${balanceOf}`
-    );
+    const signers = await ethers.getSigners();
+
+    // 查询所有账户的代币数额
+    for (let i = 0; i < signers.length; i++) {
+      const signer = signers[i];
+      const signerAddress = await signer.getAddress();
+      const balanceOf = await contract.balanceOf(signerAddress);
+      logger.info(
+        `${hre.network.name} -> ${signerAddress} -> ${config_Params["offeringCoin_Name"]}: ${balanceOf}`
+      );
+    }
   });
 });
 
