@@ -5,7 +5,7 @@ import "../contracts_openzeppelin/token/ERC20/IERC20.sol";
 
 /*
     说明：
-    0. 本案例使用USDT作为支付货币(而非ETH)。
+    0. 本案例使用模拟美元作为支付货币(而非ETH)。
     0. 新发行代币MMC的机制为，固定供应量的方式，管理员A初始持有所有供应量。
     1. 管理员B部署"筹款合约"。
     2. 管理员A，授权足额(硬顶值)给"筹款合约"。
@@ -21,7 +21,7 @@ import "../contracts_openzeppelin/token/ERC20/IERC20.sol";
 contract Fundraising {
     address public _owner;
     address public _ownerOfTokenOffering;
-    IERC20 public _tokenUSDT;    // 使用模拟美元代币(原生以太币的获取太麻烦)
+    IERC20 public _tokenMockPayCoin;    // 使用模拟美元代币(原生以太币的获取太麻烦)
     IERC20 public _tokenOffering;  // 待销售的代币
 
     enum SaleState { 
@@ -64,7 +64,7 @@ contract Fundraising {
     }    
 
     constructor(
-        address tokenUSDTAddress,
+        address tokenMockPayCoinAddress,
         address tokenOfferingAddress,
         address ownerOfTokenOffering,
         uint256 softCap,
@@ -78,8 +78,8 @@ contract Fundraising {
     ) {
         _owner = msg.sender;
 
-        require(tokenUSDTAddress != address(0), "tokenUSDTAddress != address(0)");
-        _tokenUSDT = IERC20(tokenUSDTAddress);
+        require(tokenMockPayCoinAddress != address(0), "tokenMockPayCoinAddress != address(0)");
+        _tokenMockPayCoin = IERC20(tokenMockPayCoinAddress);
 
         require(tokenOfferingAddress != address(0), "tokenOfferingAddress != address(0)");
         _tokenOffering = IERC20(tokenOfferingAddress);
@@ -139,7 +139,7 @@ contract Fundraising {
         // 已经达到硬顶，无法购买
         require(raisedAmount < _hardCap, "already reached hard cap");
 
-        // 前端，必须先取得用户的授权，才能操控USDT
+        // 前端，必须先取得用户的授权，才能操控MockPayCoin
         require(amount > 0, "buyToken amount > 0");
 
         uint256 tokensToTransfer = 0;        
@@ -153,8 +153,8 @@ contract Fundraising {
         // 确保本合约有足额的MMC，可供分配
         require(_tokenOffering.allowance(_ownerOfTokenOffering, address(this)) > tokensToTransfer, "_ownerOfTokenOffering, address(this)) > tokensToTransfer");
         
-        // 把USDT转入本合约
-        _tokenUSDT.transferFrom(msg.sender, address(this), amount);
+        // 把MockPayCoin转入本合约
+        _tokenMockPayCoin.transferFrom(msg.sender, address(this), amount);
 
         // 把用户购入的MMC，转入到锁仓合约
         //_tokenOffering.transferFrom();
@@ -189,7 +189,7 @@ contract Fundraising {
         require(tokensToTransfer > 0, "refundMoney : tokensToTransfer > 0");
 
         // 把钱退还给用户
-       _tokenUSDT.transfer(msg.sender, amount);
+       _tokenMockPayCoin.transfer(msg.sender, amount);
 
        emit RefundMoney(msg.sender, amount, tokensToTransfer);
     }
@@ -198,16 +198,16 @@ contract Fundraising {
     function withdrawMoney() external onlyOwner {
         require(getSaleState() == SaleState.Ended, "withdrawMoney: getSaleState() == SaleState.Ended");
 
-        uint256 amount = _tokenUSDT.balanceOf(address(this));
+        uint256 amount = _tokenMockPayCoin.balanceOf(address(this));
         require(amount > 0, "withdrawMoney : amount > 0");
-        _tokenUSDT.transfer(msg.sender, amount);
+        _tokenMockPayCoin.transfer(msg.sender, amount);
 
         emit WithdrawMoney(msg.sender, amount);
     }
 
     // 查询"本合约持有的筹集资金额度"
     function getBalanceOf() external view returns(uint256) {
-        return _tokenUSDT.balanceOf(address(this));
+        return _tokenMockPayCoin.balanceOf(address(this));
     }
 
     // 查询"外部管理员授权给本合约的代币额度"

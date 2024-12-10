@@ -6,6 +6,13 @@
         "offeringCoin_Name": "MaoMao",
         "offeringCoin_Symbol": "MMT",
         "offeringCoin_TotalSupply": 1e9,
-        "offeringCoin_Decimals": 18
+        "offeringCoin_Decimals": 18,
+
+        "mockPayCoin_Desc": "配置准备作为模拟支付的代币，Mock_USDT or ...",
+        "mockPayCoin_ContractName": "Mock_USDT",
+        "mockPayCoin_ContractFileName": "Mock_USDT.sol",
+        "mockPayCoin_Name": "Mock_USDT",
+        "mockPayCoin_Symbol": "M_USDT",
+        "mockPayCoin_Decimals": 6
     }
 }

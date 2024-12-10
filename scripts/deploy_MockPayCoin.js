@@ -12,30 +12,29 @@ async function main() {
   const config_Params = loadContractParams();
 
   // 获取"新发行代币"的合约工厂
-  const OfferingCoinFactory = await ethers.getContractFactory(
-    config_Params["offeringCoin_ContractName"],
+  const MockPayCoinFactory = await ethers.getContractFactory(
+    config_Params["mockPayCoin_ContractName"],
     {
       contractPath:
-        "./contracts/" + config_Params["offeringCoin_ContractFileName"],
+        "./contracts/" + config_Params["mockPayCoin_ContractFileName"],
     }
   );
 
   // 部署"新发行代币"
-  const offeringCoin = await OfferingCoinFactory.deploy(
-    config_Params["offeringCoin_Name"],
-    config_Params["offeringCoin_Symbol"],
-    config_Params["offeringCoin_TotalSupply"],
-    config_Params["offeringCoin_Decimals"]
+  const mockPayCoin = await MockPayCoinFactory.deploy(
+    config_Params["mockPayCoin_Name"],
+    config_Params["mockPayCoin_Symbol"],
+    config_Params["mockPayCoin_Decimals"]
   );
-  await offeringCoin.deployed();
+  await mockPayCoin.deployed();
 
   // 保存合约地址
   saveContractAddress(
-    config_Params["offeringCoin_ContractName"],
-    offeringCoin.address
+    config_Params["mockPayCoin_ContractName"],
+    mockPayCoin.address
   );
 
-  logger.info(`offeringCoin deployed to (address): ${offeringCoin.address}`);
+  logger.info(`mockPayCoin deployed to (address): ${mockPayCoin.address}`);
 }
 
 main()
@@ -46,5 +45,5 @@ main()
   });
 
 /*
-      npx hardhat run .\scripts\deploy_OfferingCoin.js --network localHardhat
+      npx hardhat run .\scripts\deploy_MockPayCoin.js --network localHardhat
 */

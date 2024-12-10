@@ -2,9 +2,7 @@ const hre = require("hardhat");
 require("dotenv").config();
 const logger = require("../scripts/tools/logger");
 const { loadContractParams } = require("../scripts/tools/configReader");
-const {
-  readSavedContractAddress,
-} = require("../scripts/tools/contractAddressLoader");
+const { readSavedContractAddress } = require("../scripts/tools/contractAddressLoader");
 const { loadABI } = require("../scripts/tools/contractABILoader");
 
 describe(" ", function () {
