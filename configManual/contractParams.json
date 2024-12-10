@@ -1,5 +1,8 @@
 {
     "localHardhat": {
+        "offeringCoin_Desc": "配置准备发行的代币，MaoMao or GouGou or ...",
+        "offeringCoin_ContractName": "MaoMao",
+        "offeringCoin_ContractFileName": "MaoMao.sol",
         "offeringCoin_Name": "MaoMao",
         "offeringCoin_Symbol": "MMT",
         "offeringCoin_TotalSupply": 1e9,
