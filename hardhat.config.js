@@ -82,6 +82,6 @@ module.exports = {
     flat: false,     // 是否将所有 ABI 写入一个文件
   },  
   mocha: {
-    reporter: 'dot', // 这里指定了Mocha的reporter
+    reporter: 'list', // 这里指定了Mocha的reporter
   },  
 };

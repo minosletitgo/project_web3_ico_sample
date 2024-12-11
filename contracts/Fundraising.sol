@@ -208,7 +208,7 @@ contract Fundraising {
     }
 
     // 查询"本合约持有的筹集资金额度"
-    function getBalanceOf() external view returns(uint256) {
+    function getBalanceOfPayCoin() external view returns(uint256) {
         return _tokenMockPayCoin.balanceOf(address(this));
     }
 
@@ -226,7 +226,7 @@ contract Fundraising {
     
     
     //////////////////////////定义一些DEBUG事件 - 正式版本注销掉/////////////////////////////////
-    function debug_GetBlockTimeStamp() external view returns(uint256)  {
-        return (block.timestamp);
-    }
+    // function debug_GetBlockTimeStamp() external view returns(uint256)  {
+    //     return (block.timestamp);
+    // }
 }

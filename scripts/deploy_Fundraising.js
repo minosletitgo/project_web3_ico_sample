@@ -18,14 +18,10 @@ async function main() {
     }
   );
 
-  if (hre.network.name == "localHardhat") {
-    // 由于本地Hardhat开启的测试链，它的时间戳可能有偏差，这里强行设置"下一个区块的时间戳"
-    await hre.network.provider.send("evm_setNextBlockTimestamp", [getCurrentUnixTimestampSec()]);
-  }
-
-  // 预售期开始时间戳
-  const presaleStartTimeStamp = convertToUnixTimestamp(config_Params["fundraising_PresaleStartTimeStamp"]);
-  logger.info(`presaleStartTimeStamp: ${presaleStartTimeStamp}`);
+  // if (hre.network.name == "localHardhat") {
+  //   // 由于本地Hardhat开启的测试链，它的时间戳可能有偏差，这里强行设置"下一个区块的时间戳"
+  //   await hre.network.provider.send("evm_setNextBlockTimestamp", [getCurrentUnixTimestampSec()]);
+  // }
 
   // 完整的填写"筹款合约"的构造参数
   const fundraising = await FundraisingFactory.deploy(
@@ -36,7 +32,7 @@ async function main() {
     config_Params["fundraising_HardCapValue"] * 10 ** config_Params["mockPayCoin_Decimals"],
     config_Params["fundraising_PresaleRate"],
     config_Params["fundraising_PublicsaleRate"],
-    presaleStartTimeStamp,
+    convertToUnixTimestamp(config_Params["fundraising_PresaleStartTimeStamp"]),
     config_Params["fundraising_PresaleDurationSeconds"],
     config_Params["fundraising_PublicDurationSeconds"],
     config_Params["fundraising_LockTokenDurationSeconds"]
