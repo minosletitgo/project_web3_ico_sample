@@ -208,7 +208,7 @@ contract Fundraising {
     }
 
     // 查询"本合约持有的筹集资金额度"
-    function getBalanceOfPayCoin() external view returns(uint256) {
+    function getBalanceOfMockPayCoin() external view returns(uint256) {
         return _tokenMockPayCoin.balanceOf(address(this));
     }
 

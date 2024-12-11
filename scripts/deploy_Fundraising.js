@@ -2,7 +2,7 @@ const { ethers } = require("hardhat");
 const logger = require("./tools/logger");
 const { loadContractParams } = require("./tools/configReader");
 const { saveContractAddress, readSavedContractAddress } = require("./tools/contractAddressLoader");
-const { convertToUnixTimestamp, getCurrentUnixTimestampSec } = require("./tools/timeHelper");
+const { convertDataStringToUnixTimestamp, getCurrentUnixTimestampSec, autoSetNextBlockTimestamp } = require("./tools/timeHelper");
 
 async function main() {
   const [deployer] = await ethers.getSigners();
@@ -18,10 +18,7 @@ async function main() {
     }
   );
 
-  // if (hre.network.name == "localHardhat") {
-  //   // 由于本地Hardhat开启的测试链，它的时间戳可能有偏差，这里强行设置"下一个区块的时间戳"
-  //   await hre.network.provider.send("evm_setNextBlockTimestamp", [getCurrentUnixTimestampSec()]);
-  // }
+  await autoSetNextBlockTimestamp();
 
   // 完整的填写"筹款合约"的构造参数
   const fundraising = await FundraisingFactory.deploy(
@@ -32,7 +29,7 @@ async function main() {
     config_Params["fundraising_HardCapValue"] * 10 ** config_Params["mockPayCoin_Decimals"],
     config_Params["fundraising_PresaleRate"],
     config_Params["fundraising_PublicsaleRate"],
-    convertToUnixTimestamp(config_Params["fundraising_PresaleStartTimeStamp"]),
+    convertDataStringToUnixTimestamp(config_Params["fundraising_PresaleStartTimeStamp"]),
     config_Params["fundraising_PresaleDurationSeconds"],
     config_Params["fundraising_PublicDurationSeconds"],
     config_Params["fundraising_LockTokenDurationSeconds"]

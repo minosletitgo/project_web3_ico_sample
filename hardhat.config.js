@@ -53,6 +53,7 @@ module.exports = {
         process.env.PRIVATE_KEY_localHardhat_19
       ],
       loggingEnabled: true, // 启用日志记录
+      allowBlocksWithSameTimestamp: true,
     },
     sepolia: {
       url: process.env.PRIVATE_URL_ETH_Sepolia,

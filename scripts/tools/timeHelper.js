@@ -18,7 +18,7 @@ function getCurrentUnixTimestampSec() {
  * @param {string} [formatString="yyyy-MM-dd HH:mm:ss"] - 输出格式，默认为 "yyyy-MM-dd HH:mm:ss"
  * @returns {string | null} 格式化后的日期字符串或null（如果时间戳无效）
  */
-function convertFromUnixTimestamp(
+function convertUnixTimestampToDataString(
   timestamp,
   formatString = "yyyy-MM-dd HH:mm:ss"
 ) {
@@ -51,7 +51,7 @@ function convertFromUnixTimestamp(
  * const timeString = "2024-12-11 15:12:09";
  *
  */
-function convertToUnixTimestamp(
+function convertDataStringToUnixTimestamp(
   timeString,
   formatString = "yyyy-MM-dd HH:mm:ss"
 ) {
@@ -68,8 +68,17 @@ function convertToUnixTimestamp(
   return Math.floor(date.getTime() / 1000);
 }
 
+async function autoSetNextBlockTimestamp() {
+  if (hre.network.name === "localHardhat") {
+    // 在本地Hardhat开启的测试链，即使新产生区块，block.timestamp 也不会更新到真实时间戳。
+    // 故，这里强行设置一次，让它趋近于真实的时间戳
+    await hre.network.provider.send("evm_setNextBlockTimestamp", [getCurrentUnixTimestampSec()]);
+  }
+}
+
 module.exports = {
   getCurrentUnixTimestampSec,
-  convertFromUnixTimestamp,
-  convertToUnixTimestamp,
+  convertUnixTimestampToDataString,
+  convertDataStringToUnixTimestamp,
+  autoSetNextBlockTimestamp,
 };
