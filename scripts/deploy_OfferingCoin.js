@@ -24,7 +24,7 @@ async function main() {
   const offeringCoin = await OfferingCoinFactory.deploy(
     config_Params["offeringCoin_Name"],
     config_Params["offeringCoin_Symbol"],
-    config_Params["offeringCoin_TotalSupply"],
+    config_Params["offeringCoin_TotalSupplyValue"],
     config_Params["offeringCoin_Decimals"]
   );
   await offeringCoin.deployed();

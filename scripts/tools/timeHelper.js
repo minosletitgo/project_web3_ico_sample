@@ -1,0 +1,42 @@
+// 首先安装 date-fns 和 date-fns/locale（如果需要）
+// npm install date-fns@3.6.0
+
+const { parse, isValid } = require('date-fns');
+
+/**
+ * 获取当前Unix时间戳（秒）
+ * @returns {number} 当前时间戳（秒）
+ */
+function getCurrentUnixTimestampSec() {
+    const currentTimestampMs = new Date().getTime();
+    return Math.floor(currentTimestampMs / 1000);
+  }
+
+/**
+ * 将时间字符串转换为Unix时间戳（秒）
+ * @param {string} timeString - 时间字符串
+ * @param {string} [formatString="yyyy-MM-dd HH:mm:ss"] - 时间格式，默认为 "yyyy-MM-dd HH:mm:ss"
+ * @returns {number | null} Unix时间戳（秒）或null（如果时间字符串无效）
+ * 
+ * 示例：
+ * const timeString = "2024-12-11 15:12:09";
+ * 
+ */
+function convertToUnixTimestamp(timeString, formatString = "yyyy-MM-dd HH:mm:ss") {
+  // 解析时间字符串
+  const date = parse(timeString, formatString, new Date());
+
+  // 检查日期是否有效
+  if (!isValid(date)) {
+    console.error("Invalid date:", timeString);
+    return null;
+  }
+
+  // 转换为Unix时间戳（以秒为单位）
+  return Math.floor(date.getTime() / 1000);
+}
+
+module.exports = {
+  getCurrentUnixTimestampSec,
+  convertToUnixTimestamp,
+};

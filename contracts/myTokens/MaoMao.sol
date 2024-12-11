@@ -15,14 +15,14 @@ contract MaoMao is IERC20, Ownable {
     constructor(
         string memory name,
         string memory symbol,
-        uint256 initSupply,
+        uint256 totalSupplyValue,
         uint8 decimal
     ) Ownable(msg.sender) {
         _name = name;
         _symbol = symbol;
+        _totalSupply = totalSupplyValue * 10 ** decimal;
         _decimal = decimal;
-        _totalSupply = initSupply;
-
+        
         // 固定总供应量，直接给管理员
         _balanceOf[msg.sender] = _totalSupply;
 

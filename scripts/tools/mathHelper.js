@@ -1,4 +1,4 @@
-// math.js
+// mathHelper.js
 
 // 定义 getRandomFloat 函数
 function getRandomFloat(min, max) {

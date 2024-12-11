@@ -12,6 +12,7 @@
   "dependencies": {
     "@nomiclabs/hardhat-ethers": "^2.2.1",
     "@nomiclabs/hardhat-etherscan": "^3.1.7",
+    "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "ethers": "^5.4.1",
     "hardhat": "^2.22.9",

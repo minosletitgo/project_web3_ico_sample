@@ -4,7 +4,7 @@ const logger = require("../scripts/tools/logger");
 const { loadContractParams } = require("../scripts/tools/configReader");
 const { readSavedContractAddress } = require("../scripts/tools/contractAddressLoader");
 const { loadABI } = require("../scripts/tools/contractABILoader");
-const { getRandomInt } = require("../scripts/tools/math");
+const { getRandomInt } = require("../scripts/tools/mathHelper");
 
 describe(" ", function () {
   // 获取全局配置

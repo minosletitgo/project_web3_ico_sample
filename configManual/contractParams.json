@@ -5,7 +5,8 @@
         "offeringCoin_ContractFileName": "MaoMao.sol",
         "offeringCoin_Name": "MaoMao",
         "offeringCoin_Symbol": "MMT",
-        "offeringCoin_TotalSupply": 1e9,
+        "offeringCoin_TotalSupplyValue": 1e9,
+        "offeringCoin_TotalSupplyValueDesc": "总供应量值，使用最大单位，如 10亿个最大单位",
         "offeringCoin_Decimals": 18,
 
         "mockPayCoin_Desc": "配置准备作为模拟支付的代币，Mock_USDT or ...",
@@ -13,6 +14,20 @@
         "mockPayCoin_ContractFileName": "Mock_USDT.sol",
         "mockPayCoin_Name": "Mock_USDT",
         "mockPayCoin_Symbol": "M_USDT",
-        "mockPayCoin_Decimals": 6
+        "mockPayCoin_Decimals": 6,
+
+        "fundraising_Desc": "筹集资金合约",
+        "fundraising_ContractName": "Fundraising",
+        "fundraising_ContractFileName": "Fundraising.sol",
+        "fundraising_SoftCapValue": 20000,
+        "fundraising_SoftCapValueDesc": "筹款软顶值，使用最大单位，如 20000个最大单位",
+        "fundraising_HardCapValue": 200000,
+        "fundraising_HardCapValueDesc": "筹款硬顶值，使用最大单位，如 200000个最大单位",
+        "fundraising_PresaleRate": 25,
+        "fundraising_PublicsaleRate": 20,
+        "fundraising_PresaleStartTimeStamp": "2024-12-11 16:32:09",
+        "fundraising_PresaleDurationSeconds": 3600,
+        "fundraising_PublicDurationSeconds": 3600,
+        "fundraising_LockTokenDurationSeconds": 3600
     }
 }

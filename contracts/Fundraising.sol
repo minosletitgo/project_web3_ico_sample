@@ -2,6 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "../contracts_openzeppelin/token/ERC20/IERC20.sol";
+//import "hardhat/console.sol";
 
 /*
     说明：
@@ -45,7 +46,7 @@ contract Fundraising {
 
     mapping(address => uint256) public _contributions;   // 存储所有投资者的投入资金 
     mapping(address => uint256) public _tokensPurchased; // 存储所有投资者的购入代币    
-    uint256 public raisedAmount;// 当前筹集的金额
+    uint256 public _raisedAmount;// 当前筹集的金额
 
     event BuyTokenWhenPresale(address indexed buyer, uint256 payAmount, uint256 getAmount);
     event BuyTokenWhenPublicsale(address indexed buyer, uint256 payAmount, uint256 getAmount);
@@ -94,10 +95,10 @@ contract Fundraising {
         _presaleRate = presaleRate;
         _publicSaleRate = publicSaleRate;
 
-        require(presaleStartTimeStamp > block.timestamp);
-        require(presaleDurationSeconds > 0);
-        require(publicsaleDurationSeconds > 0);
-        require(lockTokenDurationSeconds > 0);
+        require(presaleStartTimeStamp > block.timestamp, "presaleStartTimeStamp > block.timestamp");
+        require(presaleDurationSeconds > 0, "presaleDurationSeconds > 0");
+        require(publicsaleDurationSeconds > 0, "publicsaleDurationSeconds > 0");
+        require(lockTokenDurationSeconds > 0, "lockTokenDurationSeconds > 0");
         _presaleStartTimeStamp = presaleStartTimeStamp;        
         _presaleDurationSeconds = presaleDurationSeconds;
         _publicsaleDurationSeconds = publicsaleDurationSeconds;
@@ -137,7 +138,7 @@ contract Fundraising {
         }
         
         // 已经达到硬顶，无法购买
-        require(raisedAmount < _hardCap, "already reached hard cap");
+        require(_raisedAmount < _hardCap, "already reached hard cap");
 
         // 前端，必须先取得用户的授权，才能操控MockPayCoin
         require(amount > 0, "buyToken amount > 0");
@@ -162,7 +163,7 @@ contract Fundraising {
         _contributions[msg.sender] += amount;
         _tokensPurchased[msg.sender] += tokensToTransfer;
 
-        raisedAmount += tokensToTransfer;
+        _raisedAmount += tokensToTransfer;
 
         if (getSaleState() != SaleState.Presale) {
             emit BuyTokenWhenPresale(msg.sender, amount, tokensToTransfer);
@@ -171,8 +172,8 @@ contract Fundraising {
             emit BuyTokenWhenPublicsale(msg.sender, amount, tokensToTransfer);
         }
 
-        if (raisedAmount >= _hardCap)  {
-            emit JustReachedHardCap(msg.sender, amount, tokensToTransfer, raisedAmount);
+        if (_raisedAmount >= _hardCap)  {
+            emit JustReachedHardCap(msg.sender, amount, tokensToTransfer, _raisedAmount);
         }
     }
 
@@ -214,4 +215,17 @@ contract Fundraising {
     function getOfferingCoinAllowance() external view returns (uint256) {
         return _tokenOffering.allowance(_ownerOfTokenOffering, address(this));
     }
+
+
+    
+    
+    
+    
+    
+    
+    
+    // //////////////////////////定义一些DEBUG事件 - 正式版本注销掉/////////////////////////////////
+    // function debug_GetBlockTimeStamp() external view returns(uint256)  {
+    //     return (uint256)(block.timestamp);
+    // }
 }
