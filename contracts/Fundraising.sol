@@ -59,10 +59,10 @@ contract Fundraising {
         _;
     }       
 
-    modifier inSaleState() {
-        require(getSaleState() == SaleState.Presale || getSaleState() == SaleState.PublicSale, "Not in Sale");
-        _;
-    }    
+    // modifier inSaleState() {
+    //     require(getSaleState() == SaleState.Presale || getSaleState() == SaleState.PublicSale, "Not in Sale");
+    //     _;
+    // }    
 
     constructor(
         address tokenMockPayCoinAddress,
@@ -127,7 +127,7 @@ contract Fundraising {
     }
 
     // 用户发起"购入代币"
-    function buyToken(uint256 amount) external inSaleState {
+    function buyToken(uint256 amount) external {
         // 售卖还未开始
         if (getSaleState() == SaleState.NotStarted) {
             revert("buyToken SaleState.NotStarted");

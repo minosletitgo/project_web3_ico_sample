@@ -11,13 +11,15 @@ describe(" ", function () {
   const config_Params = loadContractParams();
 
   let contract;
+  let oprSigner;
 
   before(async function () {
     const signers = await ethers.getSigners();
+    oprSigner = signers[0];
     contract = new hre.ethers.Contract(
       readSavedContractAddress(config_Params["fundraising_ContractName"]),
       loadABI(config_Params["fundraising_ContractName"]),
-      signers[0]
+      oprSigner
     );    
     logger.info(`合约示例获取完成 \n`);
   });
@@ -29,8 +31,8 @@ describe(" ", function () {
 
   it("", async function () {
     console.log(``);
-    await printAllValue(contract);    
-  });    
+    await buyToken(contract, oprSigner, 1 * 10 ** config_Params["mockPayCoin_Decimals"]);
+  });
 });
 
 async function printAllValue(contract) {
@@ -57,7 +59,9 @@ async function printAllValue(contract) {
     logger.info(`getSaleState -> ${await contract.getSaleState()}`);    
 }
 
-
+async function buyToken(contract, oprSigner, amount) {
+    await contract.buyToken(amount);
+}
 
 /*
     npx hardhat test tests/test_Fundraising.js --network localHardhat
