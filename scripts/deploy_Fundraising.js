@@ -2,7 +2,7 @@ const { ethers } = require("hardhat");
 const logger = require("./tools/logger");
 const { loadContractParams } = require("./tools/configReader");
 const { saveContractAddress, readSavedContractAddress } = require("./tools/contractAddressLoader");
-const { convertToUnixTimestamp } = require("./tools/timeHelper");
+const { convertToUnixTimestamp, getCurrentUnixTimestampSec } = require("./tools/timeHelper");
 
 async function main() {
   const [deployer] = await ethers.getSigners();
@@ -17,6 +17,11 @@ async function main() {
         "./contracts/" + config_Params["fundraising_ContractFileName"],
     }
   );
+
+  if (hre.network.name == "localHardhat") {
+    // 由于本地Hardhat开启的测试链，它的时间戳可能有偏差，这里强行设置"下一个区块的时间戳"
+    await hre.network.provider.send("evm_setNextBlockTimestamp", [getCurrentUnixTimestampSec()]);
+  }
 
   // 预售期开始时间戳
   const presaleStartTimeStamp = convertToUnixTimestamp(config_Params["fundraising_PresaleStartTimeStamp"]);

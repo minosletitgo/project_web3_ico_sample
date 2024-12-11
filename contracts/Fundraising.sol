@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "../contracts_openzeppelin/token/ERC20/IERC20.sol";
-//import "hardhat/console.sol";
+import "hardhat/console.sol";//调试Log，正式版记得注销掉
 
 /*
     说明：
@@ -95,6 +95,7 @@ contract Fundraising {
         _presaleRate = presaleRate;
         _publicSaleRate = publicSaleRate;
 
+        console.log("presaleStartTimeStamp(%d) > block.timestamp(%d)", presaleStartTimeStamp, block.timestamp);
         require(presaleStartTimeStamp > block.timestamp, "presaleStartTimeStamp > block.timestamp");
         require(presaleDurationSeconds > 0, "presaleDurationSeconds > 0");
         require(publicsaleDurationSeconds > 0, "publicsaleDurationSeconds > 0");
@@ -224,8 +225,8 @@ contract Fundraising {
     
     
     
-    // //////////////////////////定义一些DEBUG事件 - 正式版本注销掉/////////////////////////////////
-    // function debug_GetBlockTimeStamp() external view returns(uint256)  {
-    //     return (uint256)(block.timestamp);
-    // }
+    //////////////////////////定义一些DEBUG事件 - 正式版本注销掉/////////////////////////////////
+    function debug_GetBlockTimeStamp() external view returns(uint256)  {
+        return (block.timestamp);
+    }
 }
