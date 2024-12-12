@@ -20,18 +20,18 @@ describe(" ", function () {
       signers[0]
     );
 
-    // 为所有账户地址铸造一些"模拟支付代币"
-    for (let i = 0; i < signers.length; i++) {
-      const signer = signers[i];
-      const signerAddress = await signer.getAddress();
-      const decimals = await contract.decimals();
-      const mintAmount = getRandomInt(500, 2000) * 10 ** decimals;
-      const tx = await contract.mint(signerAddress, mintAmount);
-      await tx.wait();
-      logger.info(
-        `${hre.network.name} -> ${signerAddress} -> mintAmount -> ${config_Params["mockPayCoin_Name"]} : ${mintAmount}`
-      );
-    }   
+    // // 为所有账户地址铸造一些"模拟支付代币"
+    // for (let i = 0; i < signers.length; i++) {
+    //   const signer = signers[i];
+    //   const signerAddress = await signer.getAddress();
+    //   const decimals = await contract.decimals();
+    //   const mintAmount = getRandomInt(500, 2000) * 10 ** decimals;
+    //   const tx = await contract.mint(signerAddress, mintAmount);
+    //   await tx.wait();
+    //   logger.info(
+    //     `${hre.network.name} -> ${signerAddress} -> mintAmount -> ${config_Params["mockPayCoin_Name"]} : ${mintAmount}`
+    //   );
+    // }   
     
     logger.info("\n");
   });
@@ -41,17 +41,30 @@ describe(" ", function () {
     const ownerAddress = await contract.owner();
     logger.info(`ownerAddress -> ${ownerAddress}`);
 
-    // 查询所有账户的模拟支付代币的余额
-    const signers = await ethers.getSigners();
-    for (let i = 0; i < signers.length; i++) {
-      const signer = signers[i];
-      const signerAddress = await signer.getAddress();
-      const balanceOf = await contract.balanceOf(signerAddress);
-      logger.info(
-        `${hre.network.name} -> ${signerAddress} -> balanceOf -> ${config_Params["mockPayCoin_Name"]} : ${balanceOf}`
-      );
-    }     
+    // // 查询所有账户的模拟支付代币的余额
+    // const signers = await ethers.getSigners();
+    // for (let i = 0; i < signers.length; i++) {
+    //   const signer = signers[i];
+    //   const signerAddress = await signer.getAddress();
+    //   const balanceOf = await contract.balanceOf(signerAddress);
+    //   logger.info(
+    //     `${hre.network.name} -> ${signerAddress} -> balanceOf -> ${config_Params["mockPayCoin_Name"]} : ${balanceOf}`
+    //   );
+    // }     
   });
+
+  it(" ", async function () {
+    logger.info(``);
+    // 查询"账户1"，为"筹款合约"授予的额度
+
+    const signers = await ethers.getSigners();
+    const buyerSigner = signers[1];
+    const buyerAddress = await buyerSigner.getAddress();
+    logger.info(`buyerAddress = ${buyerAddress}`);
+    const contractMockPayCoin = new hre.ethers.Contract(readSavedContractAddress(config_Params["mockPayCoin_ContractName"]), loadABI(config_Params["mockPayCoin_ContractName"]), buyerSigner);
+    let approveMockPayCoin = await contractMockPayCoin.allowance(buyerAddress, readSavedContractAddress(config_Params["fundraising_ContractName"]));
+    logger.info(`[${buyerAddress}] -> [${readSavedContractAddress(config_Params["fundraising_ContractName"])}] : approveMockPayCoin = ${approveMockPayCoin}`);
+  });  
 });
 
 /*

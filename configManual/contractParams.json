@@ -25,7 +25,7 @@
         "fundraising_HardCapValueDesc": "筹款硬顶值，使用最大单位，如 200000个最大单位",
         "fundraising_PresaleRate": 25,
         "fundraising_PublicsaleRate": 20,
-        "fundraising_PresaleStartTimeStamp": "2024-12-12 11:05:59",
+        "fundraising_PresaleStartTimeStamp": "2024-12-12 12:01:59",
         "fundraising_PresaleDurationSeconds": 3600,
         "fundraising_PublicDurationSeconds": 3600,
         "fundraising_LockTokenDurationSeconds": 3600

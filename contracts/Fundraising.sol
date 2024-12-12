@@ -164,7 +164,7 @@ contract Fundraising {
         _contributions[msg.sender] += amount;
         _tokensPurchased[msg.sender] += tokensToTransfer;
 
-        _raisedAmount += tokensToTransfer;
+        _raisedAmount += amount;
 
         if (getSaleState() != SaleState.Presale) {
             emit BuyTokenWhenPresale(msg.sender, amount, tokensToTransfer);
