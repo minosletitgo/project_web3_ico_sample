@@ -64,24 +64,23 @@ function convertDataStringToUnixTimestamp(timeString, formatString = "yyyy-MM-dd
 }
 
 async function autoSetNextBlockTimestamp() {
-  if (hre.network.name === "localHardhat") {
+  if (hre.network.name == "localHardhat") {    
     /*
         在本地Hardhat开启的测试链，即使新产生区块，block.timestamp 也不会更新到真实时间戳。
         故，这里强行设置一次，让它趋近于真实的时间戳
     */
-
     // 最新区块
     const latestBlock = await hre.ethers.provider.getBlock("latest");
-
+    
     // 上一个区块
     const previousBlock = await hre.ethers.provider.getBlock(latestBlock.number - 1);
 
     // 当前真实时间戳
     const currentUnixTimestampSec = getCurrentUnixTimestampSec();
-
-    // logger.info(`-> ${latestBlock.timestamp} | ${convertUnixTimestampToDataString(latestBlock.timestamp)}-> latestBlock.timestamp`);
-    // logger.info(`-> ${previousBlock.timestamp} | ${convertUnixTimestampToDataString(previousBlock.timestamp)}-> previousBlock.timestamp`);
-    // logger.info(`-> ${currentUnixTimestampSec} | ${convertUnixTimestampToDataString(currentUnixTimestampSec)} -> currentUnixTimestampSec`);
+    
+    logger.info(`-> ${latestBlock.timestamp} | ${convertUnixTimestampToDataString(latestBlock.timestamp)} -> latestBlock.timestamp`);
+    logger.info(`-> ${previousBlock.timestamp} | ${convertUnixTimestampToDataString(previousBlock.timestamp)} -> previousBlock.timestamp`);
+    logger.info(`-> ${currentUnixTimestampSec} | ${convertUnixTimestampToDataString(currentUnixTimestampSec)} -> currentUnixTimestampSec`);
 
     // 判断"最新区块的时间戳"是否小于"当前真实时间戳"
     if (latestBlock.timestamp < currentUnixTimestampSec) {

@@ -2,6 +2,7 @@ const { ethers } = require("hardhat");
 const logger = require("./tools/logger");
 const { loadContractParams } = require("./tools/configReader");
 const { saveContractAddress } = require("./tools/contractAddressLoader");
+const { getRandomInt } = require("../scripts/tools/mathHelper");
 
 async function main() {
   // 获取部署者

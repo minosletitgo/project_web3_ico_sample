@@ -2,7 +2,7 @@ const { ethers } = require("hardhat");
 const logger = require("./tools/logger");
 const { loadContractParams } = require("./tools/configReader");
 const { saveContractAddress, readSavedContractAddress } = require("./tools/contractAddressLoader");
-const { convertDataStringToUnixTimestamp, getCurrentUnixTimestampSec, autoSetNextBlockTimestamp } = require("./tools/timeHelper");
+const { convertDataStringToUnixTimestamp, autoSetNextBlockTimestamp } = require("./tools/timeHelper");
 
 async function main() {
   const [deployer] = await ethers.getSigners();
