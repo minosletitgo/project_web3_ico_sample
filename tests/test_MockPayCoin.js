@@ -8,15 +8,15 @@ const { getRandomInt } = require("../scripts/tools/mathHelper");
 
 describe(" ", function () {
   // 获取全局配置
-  const config_Params = loadContractParams();
+  const contractParams = loadContractParams();
 
   let contract;
 
   before(async function () {
     const signers = await ethers.getSigners();
     contract = new hre.ethers.Contract(
-      readSavedContractAddress(config_Params["mockPayCoin_ContractName"]),
-      loadABI(config_Params["mockPayCoin_ContractName"]),
+      readSavedContractAddress(contractParams["mockPayCoin_ContractName"]),
+      loadABI(contractParams["mockPayCoin_ContractName"]),
       signers[0]
     );
 
@@ -29,7 +29,7 @@ describe(" ", function () {
       const tx = await contract.mint(signerAddress, mintAmount);
       await tx.wait();
       logger.info(
-        `${hre.network.name} -> ${signerAddress} -> mintAmount -> ${config_Params["mockPayCoin_Name"]} : ${mintAmount}`
+        `${hre.network.name} -> ${signerAddress} -> mintAmount -> ${contractParams["mockPayCoin_Name"]} : ${mintAmount}`
       );
     }   
     
@@ -48,7 +48,7 @@ describe(" ", function () {
       const signerAddress = await signer.getAddress();
       const balanceOf = await contract.balanceOf(signerAddress);
       logger.info(
-        `${hre.network.name} -> ${signerAddress} -> balanceOf -> ${config_Params["mockPayCoin_Name"]} : ${balanceOf}`
+        `${hre.network.name} -> ${signerAddress} -> balanceOf -> ${contractParams["mockPayCoin_Name"]} : ${balanceOf}`
       );
     }     
   });
@@ -62,9 +62,9 @@ describe(" ", function () {
     const buyerAddress = await buyerSigner.getAddress();
     const buyerBalanceOf = await contract.balanceOf(buyerAddress);
     logger.info(`buyerAddress = ${buyerAddress} | buyerBalanceOf = ${buyerBalanceOf}`);
-    const contractMockPayCoin = new hre.ethers.Contract(readSavedContractAddress(config_Params["mockPayCoin_ContractName"]), loadABI(config_Params["mockPayCoin_ContractName"]), buyerSigner);
-    let approveMockPayCoin = await contractMockPayCoin.allowance(buyerAddress, readSavedContractAddress(config_Params["fundraising_ContractName"]));
-    logger.info(`[${buyerAddress}] -> [${readSavedContractAddress(config_Params["fundraising_ContractName"])}] : approveMockPayCoin = ${approveMockPayCoin}`);
+    const contractMockPayCoin = new hre.ethers.Contract(readSavedContractAddress(contractParams["mockPayCoin_ContractName"]), loadABI(contractParams["mockPayCoin_ContractName"]), buyerSigner);
+    let approveMockPayCoin = await contractMockPayCoin.allowance(buyerAddress, readSavedContractAddress(contractParams["fundraising_ContractName"]));
+    logger.info(`[${buyerAddress}] -> [${readSavedContractAddress(contractParams["fundraising_ContractName"])}] : approveMockPayCoin = ${approveMockPayCoin}`);
   });  
 });
 

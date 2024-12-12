@@ -63,41 +63,56 @@ function convertDataStringToUnixTimestamp(timeString, formatString = "yyyy-MM-dd
   return Math.floor(date.getTime() / 1000);
 }
 
-async function autoSetNextBlockTimestamp() {
-  if (hre.network.name == "localHardhat") {    
+async function adjustNextBlockTimestamp() {
+  if (hre.network.name == "localHardhat") {
     /*
         在本地Hardhat开启的测试链，即使新产生区块，block.timestamp 也不会更新到真实时间戳。
         故，这里强行设置一次，让它趋近于真实的时间戳
     */
-    // 最新区块
-    const latestBlock = await hre.ethers.provider.getBlock("latest");
-    
+    // 获取当前区块号
+    const currentBlockNumber = await ethers.provider.getBlockNumber();
+    const currentBlock = await ethers.provider.getBlock(currentBlockNumber);
     // 上一个区块
-    const previousBlock = await hre.ethers.provider.getBlock(latestBlock.number - 1);
-
+    const previousBlock = await hre.ethers.provider.getBlock(currentBlock.number - 1);
     // 当前真实时间戳
     const currentUnixTimestampSec = getCurrentUnixTimestampSec();
-    
-    logger.info(`-> ${latestBlock.timestamp} | ${convertUnixTimestampToDataString(latestBlock.timestamp)} -> latestBlock.timestamp`);
-    logger.info(`-> ${previousBlock.timestamp} | ${convertUnixTimestampToDataString(previousBlock.timestamp)} -> previousBlock.timestamp`);
+
+    logger.info(`-> ${currentBlock.timestamp} | ${convertUnixTimestampToDataString(currentBlock.timestamp)} -> currentBlock : ${currentBlock.number}`);
+    logger.info(`-> ${previousBlock.timestamp} | ${convertUnixTimestampToDataString(previousBlock.timestamp)} -> previousBlock : ${previousBlock.number}`);
     logger.info(`-> ${currentUnixTimestampSec} | ${convertUnixTimestampToDataString(currentUnixTimestampSec)} -> currentUnixTimestampSec`);
 
-    // 判断"最新区块的时间戳"是否小于"当前真实时间戳"
-    if (latestBlock.timestamp < currentUnixTimestampSec) {
+    const changeNextBlock = false;
+
+    if (changeNextBlock) {
       // 设置下一个区块的时间戳
       await hre.network.provider.send("evm_setNextBlockTimestamp", [currentUnixTimestampSec]);
 
       // 挖矿以确认新的区块
       await hre.network.provider.send("evm_mine");
 
-      logger.info("Next block timestamp has been set to the current Unix timestamp.");
+      logger.info(`Next block timestamp has been set to ${convertUnixTimestampToDataString(currentUnixTimestampSec)}`);
     }
   }
+}
+
+async function printBlockData() {
+  // 获取当前区块号
+  const currentBlockNumber = await ethers.provider.getBlockNumber();
+  const currentBlock = await ethers.provider.getBlock(currentBlockNumber);
+  // 上一个区块
+  const previousBlock = await hre.ethers.provider.getBlock(currentBlock.number - 1);
+  // 当前真实时间戳
+  const currentUnixTimestampSec = getCurrentUnixTimestampSec();
+
+  logger.info(`-> ${currentBlock.timestamp} | ${convertUnixTimestampToDataString(currentBlock.timestamp)} -> currentBlock : ${currentBlock.number}`);
+  logger.info(`-> ${previousBlock.timestamp} | ${convertUnixTimestampToDataString(previousBlock.timestamp)} -> previousBlock : ${previousBlock.number}`);
+  logger.info(`-> ${currentUnixTimestampSec} | ${convertUnixTimestampToDataString(currentUnixTimestampSec)} -> currentUnixTimestampSec`);
 }
 
 module.exports = {
   getCurrentUnixTimestampSec,
   convertUnixTimestampToDataString,
   convertDataStringToUnixTimestamp,
-  autoSetNextBlockTimestamp,
+  adjustNextBlockTimestamp,
+  printBlockData,
 };

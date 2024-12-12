@@ -7,15 +7,15 @@ const { loadABI } = require("../scripts/tools/contractABILoader");
 
 describe(" ", function () {
   // 获取全局配置
-  const config_Params = loadContractParams();
+  const contractParams = loadContractParams();
 
   let contract;
 
   before(async function () {
     const [signer] = await ethers.getSigners();
     contract = new hre.ethers.Contract(
-      readSavedContractAddress(config_Params["offeringCoin_ContractName"]),
-      loadABI(config_Params["offeringCoin_ContractName"]),
+      readSavedContractAddress(contractParams["offeringCoin_ContractName"]),
+      loadABI(contractParams["offeringCoin_ContractName"]),
       signer
     );
   });
@@ -33,7 +33,7 @@ describe(" ", function () {
       const signerAddress = await signer.getAddress();
       const balanceOf = await contract.balanceOf(signerAddress);
       logger.info(
-        `${hre.network.name} -> ${signerAddress} -> ${config_Params["offeringCoin_Name"]}: ${balanceOf}`
+        `${hre.network.name} -> ${signerAddress} -> ${contractParams["offeringCoin_Name"]}: ${balanceOf}`
       );
     }
   });

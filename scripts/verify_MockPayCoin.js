@@ -9,14 +9,14 @@ const {
 // 在你的部署脚本中
 async function main() {
   // 获取全局配置
-  const config_Params = loadContractParams();
+  const contractParams = loadContractParams();
 
   const contractAddress = readSavedContractAddress(
-    config_Params["mockPayCoin_ContractName"]
+    contractParams["mockPayCoin_ContractName"]
   );
   const constructorArgs = [
-    config_Params["mockPayCoin_ContractName"],
-    config_Params["mockPayCoin_Symbol"],
+    contractParams["mockPayCoin_ContractName"],
+    contractParams["mockPayCoin_Symbol"],
   ];
   console.log("contractAddress:", contractAddress);
 

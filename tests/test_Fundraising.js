@@ -4,20 +4,20 @@ const logger = require("../scripts/tools/logger");
 const { loadContractParams } = require("../scripts/tools/configReader");
 const { readSavedContractAddress } = require("../scripts/tools/contractAddressLoader");
 const { loadABI } = require("../scripts/tools/contractABILoader");
-const { getCurrentUnixTimestampSec, convertUnixTimestampToDataString, autoSetNextBlockTimestamp } = require("../scripts/tools/timeHelper");
+const { getCurrentUnixTimestampSec, convertUnixTimestampToDataString, adjustNextBlockTimestamp } = require("../scripts/tools/timeHelper");
 const { BigNumber } = require("ethers");
 
 describe(" ", function () {
   // 获取全局配置
-  const config_Params = loadContractParams();
+  const contractParams = loadContractParams();
 
   let adminSigner;
   let buyerSigner;
   let contractFundraising;
   let contractOfferingCoin;
-  let approveOfferingCoin = BigInt(config_Params["offeringCoin_TotalSupplyValue"]) * BigInt(10 ** config_Params["offeringCoin_Decimals"]);
+  let approveOfferingCoin = BigInt(contractParams["offeringCoin_TotalSupplyValue"]) * BigInt(10 ** contractParams["offeringCoin_Decimals"]);
   let contractMockPayCoin;
-  let buyAmount = BigInt(3 * 10 ** config_Params["mockPayCoin_Decimals"]);
+  let buyAmount = BigInt(3 * 10 ** contractParams["mockPayCoin_Decimals"]);
   
   before(async function () {
     const signers = await ethers.getSigners();
@@ -25,14 +25,14 @@ describe(" ", function () {
     buyerSigner = signers[1];
 
     logger.info(`获取"筹款合约"示例：`);
-    contractFundraising = new hre.ethers.Contract(readSavedContractAddress(config_Params["fundraising_ContractName"]), loadABI(config_Params["fundraising_ContractName"]), buyerSigner);
+    contractFundraising = new hre.ethers.Contract(readSavedContractAddress(contractParams["fundraising_ContractName"]), loadABI(contractParams["fundraising_ContractName"]), buyerSigner);
 
     logger.info(`"资金管理员"授权"筹款合约"，足额(供应量那么多:${approveOfferingCoin})的"新发行代币"：`);
-    contractOfferingCoin = new hre.ethers.Contract(readSavedContractAddress(config_Params["offeringCoin_ContractName"]), loadABI(config_Params["offeringCoin_ContractName"]), adminSigner);        
+    contractOfferingCoin = new hre.ethers.Contract(readSavedContractAddress(contractParams["offeringCoin_ContractName"]), loadABI(contractParams["offeringCoin_ContractName"]), adminSigner);        
     await contractOfferingCoin.approve(contractFundraising.address, approveOfferingCoin);
 
     logger.info(`"用户"授权"筹款合约"，足额(${buyAmount})的"模拟支付代币"`);
-    contractMockPayCoin = new hre.ethers.Contract(readSavedContractAddress(config_Params["mockPayCoin_ContractName"]), loadABI(config_Params["mockPayCoin_ContractName"]), buyerSigner);
+    contractMockPayCoin = new hre.ethers.Contract(readSavedContractAddress(contractParams["mockPayCoin_ContractName"]), loadABI(contractParams["mockPayCoin_ContractName"]), buyerSigner);
     await contractMockPayCoin.approve(contractFundraising.address, buyAmount);
   });
 
@@ -76,7 +76,7 @@ async function printAllValue(contractFundraising) {
 }
 
 async function buyToken(contractFundraising, buyerSigner, amount) {
-  await autoSetNextBlockTimestamp();
+  await adjustNextBlockTimestamp();
   await contractFundraising.buyToken(amount);
 }
 

@@ -3,7 +3,7 @@ require("dotenv").config();
 const logger = require("../scripts/tools/logger");
 const { readSavedContractAddress } = require("../scripts/tools/contractAddressLoader");
 const { loadABI } = require("../scripts/tools/contractABILoader");
-const { convertUnixTimestampToDataString, autoSetNextBlockTimestamp } = require("../scripts/tools/timeHelper");
+const { convertUnixTimestampToDataString, adjustNextBlockTimestamp } = require("../scripts/tools/timeHelper");
 
 describe(" ", function () {
 
@@ -19,7 +19,7 @@ describe(" ", function () {
   });
 
   it(" ", async function () {
-    await autoSetNextBlockTimestamp();
+    await adjustNextBlockTimestamp();
     logger.info("///////////////////////");
     logger.info(` -> ${await contract._lastUpdated()} -> ${convertUnixTimestampToDataString(await contract._lastUpdated())} -> _lastUpdated`);    
     await contract.updateTimestamp();logger.info(`contract.updateTimestamp()`);    

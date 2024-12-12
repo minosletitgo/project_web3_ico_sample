@@ -10,29 +10,29 @@ async function main() {
   logger.info(`Deploying contracts with the account: ${deployer.address}`);
 
   // 获取全局配置
-  const config_Params = loadContractParams();
+  const contractParams = loadContractParams();
 
   // 获取"新发行代币"的合约工厂
   const OfferingCoinFactory = await ethers.getContractFactory(
-    config_Params["offeringCoin_ContractName"],
+    contractParams["offeringCoin_ContractName"],
     {
       contractPath:
-        "./contracts/" + config_Params["offeringCoin_ContractFileName"],
+        "./contracts/" + contractParams["offeringCoin_ContractFileName"],
     }
   );
 
   // 部署"新发行代币"
   const offeringCoin = await OfferingCoinFactory.deploy(
-    config_Params["offeringCoin_Name"],
-    config_Params["offeringCoin_Symbol"],
-    config_Params["offeringCoin_TotalSupplyValue"],
-    config_Params["offeringCoin_Decimals"]
+    contractParams["offeringCoin_Name"],
+    contractParams["offeringCoin_Symbol"],
+    contractParams["offeringCoin_TotalSupplyValue"],
+    contractParams["offeringCoin_Decimals"]
   );
   await offeringCoin.deployed();
 
   // 保存合约地址
   saveContractAddress(
-    config_Params["offeringCoin_ContractName"],
+    contractParams["offeringCoin_ContractName"],
     offeringCoin.address
   );
 
