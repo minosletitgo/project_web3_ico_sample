@@ -15,21 +15,25 @@ describe(" ", function () {
   let oprSigner;
   let contractFundraising;
   let contractOfferingCoin;
+  let approveOfferingCoin = BigInt(config_Params["offeringCoin_TotalSupplyValue"]) * BigInt(10 ** config_Params["offeringCoin_Decimals"]);
+  let contractMockPayCoin;
+  let buyAmount = BigInt(1 * 10 ** config_Params["mockPayCoin_Decimals"]);
   
   before(async function () {
     const signers = await ethers.getSigners();
     adminSigner = signers[0];
-    oprSigner = signers[0];
+    oprSigner = signers[1];
 
     logger.info(`获取"筹款合约"示例：`);
     contractFundraising = new hre.ethers.Contract(readSavedContractAddress(config_Params["fundraising_ContractName"]), loadABI(config_Params["fundraising_ContractName"]), oprSigner);
 
-    logger.info(`"资金管理员"授权"筹款合约"，足额(供应量那么多)的"新发行代币"：`);
-    contractOfferingCoin = new hre.ethers.Contract(readSavedContractAddress(config_Params["offeringCoin_ContractName"]), loadABI(config_Params["offeringCoin_ContractName"]), adminSigner);    
-
-    let approveOfferingCoin = BigInt(config_Params["offeringCoin_TotalSupplyValue"]) * BigInt(10 ** config_Params["offeringCoin_Decimals"]);
-    logger.info(`approveOfferingCoin = ${approveOfferingCoin}`);
+    logger.info(`"资金管理员"授权"筹款合约"，足额(供应量那么多:${approveOfferingCoin})的"新发行代币"：`);
+    contractOfferingCoin = new hre.ethers.Contract(readSavedContractAddress(config_Params["offeringCoin_ContractName"]), loadABI(config_Params["offeringCoin_ContractName"]), adminSigner);        
     contractOfferingCoin.approve(contractFundraising.address, approveOfferingCoin);
+
+    logger.info(`"用户"授权"筹款合约"，足额(${buyAmount})的"模拟支付代币"`);
+    contractMockPayCoin = new hre.ethers.Contract(readSavedContractAddress(config_Params["mockPayCoin_ContractName"]), loadABI(config_Params["mockPayCoin_ContractName"]), oprSigner);
+    contractMockPayCoin.approve(contractFundraising.address, buyAmount);
   });
 
   it("", async function () {
@@ -39,9 +43,9 @@ describe(" ", function () {
 
   it("", async function () {
     console.log(``);
-    const amount = BigInt(1 * 10 ** config_Params["mockPayCoin_Decimals"]);
-    console.log(`buyToken amount = ${amount}`);
-    await buyToken(contractFundraising, oprSigner, amount);
+    console.log(`buyToken amount = ${buyAmount}`);
+    await buyToken(contractFundraising, oprSigner, buyAmount);
+    await printAllValue(contractFundraising);
   });
 });
 

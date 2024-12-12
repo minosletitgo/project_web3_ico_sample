@@ -29,7 +29,7 @@ describe(" ", function () {
       const tx = await contract.mint(signerAddress, mintAmount);
       await tx.wait();
       logger.info(
-        `${hre.network.name} -> ${signerAddress} -> mintAmount -> ${config_Params["offeringCoin_Name"]} : ${mintAmount}`
+        `${hre.network.name} -> ${signerAddress} -> mintAmount -> ${config_Params["mockPayCoin_Name"]} : ${mintAmount}`
       );
     }   
     
@@ -48,7 +48,7 @@ describe(" ", function () {
       const signerAddress = await signer.getAddress();
       const balanceOf = await contract.balanceOf(signerAddress);
       logger.info(
-        `${hre.network.name} -> ${signerAddress} -> balanceOf -> ${config_Params["offeringCoin_Name"]} : ${balanceOf}`
+        `${hre.network.name} -> ${signerAddress} -> balanceOf -> ${config_Params["mockPayCoin_Name"]} : ${balanceOf}`
       );
     }     
   });
