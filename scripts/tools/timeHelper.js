@@ -2,6 +2,7 @@
 // npm install date-fns@3.6.0
 
 const { parse, format, isValid } = require("date-fns");
+const logger = require("./logger");
 
 /**
  * 获取当前Unix时间戳（秒）
@@ -18,10 +19,7 @@ function getCurrentUnixTimestampSec() {
  * @param {string} [formatString="yyyy-MM-dd HH:mm:ss"] - 输出格式，默认为 "yyyy-MM-dd HH:mm:ss"
  * @returns {string | null} 格式化后的日期字符串或null（如果时间戳无效）
  */
-function convertUnixTimestampToDataString(
-  timestamp,
-  formatString = "yyyy-MM-dd HH:mm:ss"
-) {
+function convertUnixTimestampToDataString(timestamp, formatString = "yyyy-MM-dd HH:mm:ss") {
   // 检查时间戳是否有效
   if (isNaN(timestamp) || !isFinite(timestamp)) {
     console.error("Invalid timestamp:", timestamp);
@@ -51,10 +49,7 @@ function convertUnixTimestampToDataString(
  * const timeString = "2024-12-11 15:12:09";
  *
  */
-function convertDataStringToUnixTimestamp(
-  timeString,
-  formatString = "yyyy-MM-dd HH:mm:ss"
-) {
+function convertDataStringToUnixTimestamp(timeString, formatString = "yyyy-MM-dd HH:mm:ss") {
   // 解析时间字符串
   const date = parse(timeString, formatString, new Date());
 
@@ -70,9 +65,34 @@ function convertDataStringToUnixTimestamp(
 
 async function autoSetNextBlockTimestamp() {
   if (hre.network.name === "localHardhat") {
-    // 在本地Hardhat开启的测试链，即使新产生区块，block.timestamp 也不会更新到真实时间戳。
-    // 故，这里强行设置一次，让它趋近于真实的时间戳
-    await hre.network.provider.send("evm_setNextBlockTimestamp", [getCurrentUnixTimestampSec()]);
+    /*
+        在本地Hardhat开启的测试链，即使新产生区块，block.timestamp 也不会更新到真实时间戳。
+        故，这里强行设置一次，让它趋近于真实的时间戳
+    */
+
+    // 最新区块
+    const latestBlock = await hre.ethers.provider.getBlock("latest");
+
+    // 上一个区块
+    const previousBlock = await hre.ethers.provider.getBlock(latestBlock.number - 1);
+
+    // 当前真实时间戳
+    const currentUnixTimestampSec = getCurrentUnixTimestampSec();
+
+    // logger.info(`-> ${latestBlock.timestamp} | ${convertUnixTimestampToDataString(latestBlock.timestamp)}-> latestBlock.timestamp`);
+    // logger.info(`-> ${previousBlock.timestamp} | ${convertUnixTimestampToDataString(previousBlock.timestamp)}-> previousBlock.timestamp`);
+    // logger.info(`-> ${currentUnixTimestampSec} | ${convertUnixTimestampToDataString(currentUnixTimestampSec)} -> currentUnixTimestampSec`);
+
+    // 判断"最新区块的时间戳"是否小于"当前真实时间戳"
+    if (latestBlock.timestamp < currentUnixTimestampSec) {
+      // 设置下一个区块的时间戳
+      await hre.network.provider.send("evm_setNextBlockTimestamp", [currentUnixTimestampSec]);
+
+      // 挖矿以确认新的区块
+      await hre.network.provider.send("evm_mine");
+
+      logger.info("Next block timestamp has been set to the current Unix timestamp.");
+    }
   }
 }
 

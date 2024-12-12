@@ -28,7 +28,7 @@ describe(" ", function () {
     contractOfferingCoin = new hre.ethers.Contract(readSavedContractAddress(config_Params["offeringCoin_ContractName"]), loadABI(config_Params["offeringCoin_ContractName"]), adminSigner);    
 
     let approveOfferingCoin = BigInt(config_Params["offeringCoin_TotalSupplyValue"]) * BigInt(10 ** config_Params["offeringCoin_Decimals"]);
-    //logger.info(approveOfferingCoin);
+    logger.info(`approveOfferingCoin = ${approveOfferingCoin}`);
     contractOfferingCoin.approve(contractFundraising.address, approveOfferingCoin);
   });
 
@@ -39,7 +39,9 @@ describe(" ", function () {
 
   it("", async function () {
     console.log(``);
-    await buyToken(contractFundraising, oprSigner, 1 * 10 ** config_Params["mockPayCoin_Decimals"]);
+    const amount = BigInt(1 * 10 ** config_Params["mockPayCoin_Decimals"]);
+    console.log(`buyToken amount = ${amount}`);
+    await buyToken(contractFundraising, oprSigner, amount);
   });
 });
 
@@ -70,7 +72,7 @@ async function printAllValue(contractFundraising) {
 }
 
 async function buyToken(contractFundraising, oprSigner, amount) {
-  //await autoSetNextBlockTimestamp();
+  await autoSetNextBlockTimestamp();
   await contractFundraising.buyToken(amount);
 }
 
