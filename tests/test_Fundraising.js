@@ -4,7 +4,7 @@ const logger = require("../scripts/tools/logger");
 const { loadContractParams } = require("../scripts/tools/configReader");
 const { readSavedContractAddress } = require("../scripts/tools/contractAddressLoader");
 const { loadABI } = require("../scripts/tools/contractABILoader");
-const { getCurrentUnixTimestampSec, convertUnixTimestampToDataString, adjustNextBlockTimestamp } = require("../scripts/tools/timeHelper");
+const { getCurrentUnixTimestampSec, convertUnixTimestampToDataString } = require("../scripts/tools/timeHelper");
 const { BigNumber } = require("ethers");
 
 describe(" ", function () {
@@ -76,7 +76,6 @@ async function printAllValue(contractFundraising) {
 }
 
 async function buyToken(contractFundraising, buyerSigner, amount) {
-  await adjustNextBlockTimestamp();
   await contractFundraising.buyToken(amount);
 }
 

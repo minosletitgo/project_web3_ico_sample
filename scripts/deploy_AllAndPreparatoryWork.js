@@ -2,7 +2,7 @@ const { ethers } = require("hardhat");
 const logger = require("./tools/logger");
 const { loadContractParams } = require("./tools/configReader");
 const { saveContractAddress, readSavedContractAddress } = require("./tools/contractAddressLoader");
-const { convertDataStringToUnixTimestamp, adjustNextBlockTimestamp, printBlockData } = require("./tools/timeHelper");
+const { convertDataStringToUnixTimestamp, printBlockData } = require("./tools/timeHelper");
 const { getRandomInt } = require("../scripts/tools/mathHelper");
 
 const util = require('util');
@@ -17,6 +17,8 @@ async function main() {
   const adminSigner = allSigners[0];
   const contractParams = loadContractParams();
 
+  await printBlockData();
+
   logger.info(`准备：部署"发行新代币"(内置为管理员发币)`);
   const OfferingCoinFactory = await ethers.getContractFactory(contractParams["offeringCoin_ContractName"], {
     contractPath: "./contracts/" + contractParams["offeringCoin_ContractFileName"],
@@ -30,8 +32,8 @@ async function main() {
   await contractOfferingCoin.deployed();
   saveContractAddress(contractParams["offeringCoin_ContractName"], contractOfferingCoin.address);
 
-  await adjustNextBlockTimestamp();
-  await wait(5000);
+  await wait(2000);
+  await printBlockData();
 
   logger.info(`准备：部署"模拟支付代币"`);
   const MockPayCoinFactory = await ethers.getContractFactory(contractParams["mockPayCoin_ContractName"], {
@@ -41,8 +43,8 @@ async function main() {
   await contractMockPayCoin.deployed();
   saveContractAddress(contractParams["mockPayCoin_ContractName"], contractMockPayCoin.address);
 
-  await adjustNextBlockTimestamp();
-  await wait(5000);
+  await wait(2000);
+  await printBlockData();
 
   logger.info(`准备：为所有用户发动"模拟支付代币"`);
   for (let i = 0; i < allSigners.length; i++) {
@@ -52,10 +54,11 @@ async function main() {
     const mintAmount = BigInt(getRandomInt(500, 2000) * 10 ** decimals);
     await contractMockPayCoin.mint(signerAddress, mintAmount);
     logger.info(`${hre.network.name} -> ${signerAddress} -> mintAmount -> ${contractParams["mockPayCoin_Name"]} : ${mintAmount}`);
+    await wait(1000);
   }
 
-  await adjustNextBlockTimestamp();
-  await wait(5000);
+  await wait(2000);
+  await printBlockData();
 
   logger.info(`准备：部署"筹款合约"`);
   const FundraisingFactory = await ethers.getContractFactory(contractParams["fundraising_ContractName"], {
@@ -77,8 +80,8 @@ async function main() {
   await contractFundraising.deployed();
   saveContractAddress(contractParams["fundraising_ContractName"], contractFundraising.address);
 
-  await adjustNextBlockTimestamp();
-  await wait(5000);
+  await wait(2000);
+  await printBlockData();
 
   let approveOfferingCoin = BigInt(contractParams["offeringCoin_TotalSupplyValue"]) * BigInt(10 ** contractParams["offeringCoin_Decimals"]);
   logger.info(`"资金管理员"授权"筹款合约"，足额(供应量那么多:${approveOfferingCoin})的"新发行代币"：`);

@@ -66,8 +66,13 @@ function convertDataStringToUnixTimestamp(timeString, formatString = "yyyy-MM-dd
 async function adjustNextBlockTimestamp() {
   if (hre.network.name == "localHardhat") {
     /*
-        在本地Hardhat开启的测试链，即使新产生区块，block.timestamp 也不会更新到真实时间戳。
-        故，这里强行设置一次，让它趋近于真实的时间戳
+        在本地Hardhat开启的测试链，即使新产生区块，block.timestamp至少会 + 1
+        该函数强行设置一次，让它趋近于真实的时间戳。
+        但会失败：如，当前时间戳 < 上一区块的时间戳
+        可能原因：
+        - 在某个调用逻辑中，for调用多次某合约的函数(改状态)，for循环过程中，没有模拟"等待间隔(其实，就是等待挖矿)"
+        - 每循环一次，则生成新区块一个，且时间至少外后走1秒
+        - 这样，再次获取当前区块时间戳的时候，它可能是个未来时间戳了。
     */
     // 获取当前区块号
     const currentBlockNumber = await ethers.provider.getBlockNumber();
