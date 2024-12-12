@@ -2,7 +2,7 @@ const { ethers } = require("hardhat");
 const logger = require("./tools/logger");
 const { loadContractParams } = require("./tools/configReader");
 const { saveContractAddress, readSavedContractAddress } = require("./tools/contractAddressLoader");
-const { convertDataStringToUnixTimestamp, adjustNextBlockTimestamp } = require("./tools/timeHelper");
+const { convertDataStringToUnixTimestamp } = require("./tools/timeHelper");
 
 async function main() {
   const [deployer] = await ethers.getSigners();
@@ -17,8 +17,6 @@ async function main() {
         "./contracts/" + contractParams["fundraising_ContractFileName"],
     }
   );
-
-  await adjustNextBlockTimestamp();
 
   // 完整的填写"筹款合约"的构造参数
   const fundraising = await FundraisingFactory.deploy(

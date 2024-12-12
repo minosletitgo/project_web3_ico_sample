@@ -17,7 +17,7 @@ describe(" ", function () {
   let contractOfferingCoin;
   let approveOfferingCoin = BigInt(contractParams["offeringCoin_TotalSupplyValue"]) * BigInt(10 ** contractParams["offeringCoin_Decimals"]);
   let contractMockPayCoin;
-  let buyAmount = BigInt(3 * 10 ** contractParams["mockPayCoin_Decimals"]);
+  let buyAmount = BigInt(11 * 10 ** contractParams["mockPayCoin_Decimals"]);
   
   before(async function () {
     const signers = await ethers.getSigners();
@@ -27,12 +27,10 @@ describe(" ", function () {
     logger.info(`获取"筹款合约"示例：`);
     contractFundraising = new hre.ethers.Contract(readSavedContractAddress(contractParams["fundraising_ContractName"]), loadABI(contractParams["fundraising_ContractName"]), buyerSigner);
 
-    logger.info(`"资金管理员"授权"筹款合约"，足额(供应量那么多:${approveOfferingCoin})的"新发行代币"：`);
-    contractOfferingCoin = new hre.ethers.Contract(readSavedContractAddress(contractParams["offeringCoin_ContractName"]), loadABI(contractParams["offeringCoin_ContractName"]), adminSigner);        
-    await contractOfferingCoin.approve(contractFundraising.address, approveOfferingCoin);
-
-    logger.info(`"用户"授权"筹款合约"，足额(${buyAmount})的"模拟支付代币"`);
+    logger.info(`获取"模拟支付代币合约"示例：`);
     contractMockPayCoin = new hre.ethers.Contract(readSavedContractAddress(contractParams["mockPayCoin_ContractName"]), loadABI(contractParams["mockPayCoin_ContractName"]), buyerSigner);
+    logger.info(`"用户"持有的"模拟支付代币"总额是${await contractMockPayCoin.balanceOf(buyerSigner.address)}`);
+    logger.info(`"用户"授权"筹款合约"，足额(${buyAmount})的"模拟支付代币"`);
     await contractMockPayCoin.approve(contractFundraising.address, buyAmount);
   });
 
@@ -44,8 +42,8 @@ describe(" ", function () {
   it("", async function () {
     console.log(``);
     console.log(`buyToken amount = ${buyAmount}`);
-    // await buyToken(contractFundraising, buyerSigner, buyAmount);
-    // await printAllValue(contractFundraising);
+    await buyToken(contractFundraising, buyerSigner, buyAmount);
+    await printAllValue(contractFundraising);
   });
 });
 

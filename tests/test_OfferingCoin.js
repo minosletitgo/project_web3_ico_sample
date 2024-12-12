@@ -5,6 +5,9 @@ const { loadContractParams } = require("../scripts/tools/configReader");
 const { readSavedContractAddress } = require("../scripts/tools/contractAddressLoader");
 const { loadABI } = require("../scripts/tools/contractABILoader");
 
+const util = require('util');
+const wait = util.promisify(setTimeout);
+
 describe(" ", function () {
   // 获取全局配置
   const contractParams = loadContractParams();

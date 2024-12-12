@@ -5,7 +5,7 @@ const { saveContractAddress, readSavedContractAddress } = require("./tools/contr
 const { convertDataStringToUnixTimestamp, printBlockData } = require("./tools/timeHelper");
 const { getRandomInt } = require("../scripts/tools/mathHelper");
 
-const util = require('util');
+const util = require("util");
 const wait = util.promisify(setTimeout);
 
 /*
@@ -47,7 +47,8 @@ async function main() {
   await printBlockData();
 
   logger.info(`准备：为所有用户发动"模拟支付代币"`);
-  for (let i = 0; i < allSigners.length; i++) {
+  //for (let i = 0; i < allSigners.length; i++) {
+  for (let i = 0; i < 3; i++) {
     const signer = allSigners[i];
     const signerAddress = await signer.getAddress();
     const decimals = await contractMockPayCoin.decimals();
@@ -85,7 +86,7 @@ async function main() {
 
   let approveOfferingCoin = BigInt(contractParams["offeringCoin_TotalSupplyValue"]) * BigInt(10 ** contractParams["offeringCoin_Decimals"]);
   logger.info(`"资金管理员"授权"筹款合约"，足额(供应量那么多:${approveOfferingCoin})的"新发行代币"：`);
-  await contractOfferingCoin.approve(contractFundraising.address, approveOfferingCoin);  
+  await contractOfferingCoin.approve(contractFundraising.address, approveOfferingCoin);
 }
 
 main()
