@@ -46,9 +46,20 @@ async function main() {
   await wait(2000);
   await printBlockData();
 
+  logger.info(`准备：部署"锁仓合约"`);
+  const OfferingCoinLocker = await ethers.getContractFactory(contractParams["offeringCoinLocker_ContractName"], {
+    contractPath: "./contracts/" + contractParams["offeringCoinLocker_ContractFileName"],
+  });
+  const contractOfferingCoinLocker = await OfferingCoinLocker.connect(adminSigner).deploy(contractOfferingCoin.address);
+  await contractOfferingCoinLocker.deployed();
+  saveContractAddress(contractParams["offeringCoinLocker_ContractName"], contractOfferingCoinLocker.address);  
+
+  await wait(2000);
+  await printBlockData();
+
   logger.info(`准备：为所有用户(刻意不发管理员)发动"模拟支付代币"`);
   //for (let i = 1; i < allSigners.length; i++) {
-  for (let i = 1; i < 7; i++) {
+  for (let i = 1; i < 5; i++) {
     const signer = allSigners[i];
     const signerAddress = await signer.getAddress();
     const decimals = await contractMockPayCoin.decimals();
@@ -69,6 +80,7 @@ async function main() {
     readSavedContractAddress(contractParams["mockPayCoin_ContractName"]),
     readSavedContractAddress(contractParams["offeringCoin_ContractName"]),
     adminSigner.address,
+    contractOfferingCoinLocker.address,
     BigInt(contractParams["fundraising_SoftCapValue"] * 10 ** contractParams["mockPayCoin_Decimals"]),
     BigInt(contractParams["fundraising_HardCapValue"] * 10 ** contractParams["mockPayCoin_Decimals"]),
     contractParams["fundraising_PresaleRate"],
@@ -83,6 +95,12 @@ async function main() {
 
   await wait(2000);
   await printBlockData();
+
+  logger.info(`把"筹款合约"，设置为"锁仓合约"的权限执行者"`);
+  contractOfferingCoinLocker.addAuthorizedAddress(contractFundraising.address);
+
+  await wait(2000);
+  await printBlockData();  
 
   let approveOfferingCoin = BigInt(contractParams["offeringCoin_TotalSupplyValue"]) * BigInt(10 ** contractParams["offeringCoin_Decimals"]);
   logger.info(`"资金管理员"授权"筹款合约"，足额(供应量那么多:${approveOfferingCoin})的"新发行代币"：`);

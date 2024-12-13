@@ -17,34 +17,39 @@ describe(" ", function () {
 
   let adminSigner;
   let buyerSigner;
-  let contractFundraising;
+
   let contractMockPayCoin;
   let contractOfferingCoin;
+  let contractOfferingCoinLocker;
+  let contractFundraising;
 
   before(async function () {
     const signers = await ethers.getSigners();
     adminSigner = signers[0];
     buyerSigner = signers[1];
 
-    logger.info(`获取"筹款合约"示例：`);
-    contractFundraising = new hre.ethers.Contract(readSavedContractAddress(contractParams["fundraising_ContractName"]), loadABI(contractParams["fundraising_ContractName"]), buyerSigner);
-
-    logger.info(`获取"模拟支付代币合约"示例：`);
+    logger.info(`获取"模拟支付代币合约"实例：`);
     contractMockPayCoin = new hre.ethers.Contract(readSavedContractAddress(contractParams["mockPayCoin_ContractName"]), loadABI(contractParams["mockPayCoin_ContractName"]), buyerSigner);
 
-    logger.info(`获取"新发行代币合约"示例：`);
+    logger.info(`获取"新发行代币合约"实例：`);
     contractOfferingCoin = new hre.ethers.Contract(readSavedContractAddress(contractParams["offeringCoin_ContractName"]), loadABI(contractParams["offeringCoin_ContractName"]), buyerSigner);        
+
+    logger.info(`获取"锁仓合约"实例：`);
+    contractOfferingCoinLocker = new hre.ethers.Contract(readSavedContractAddress(contractParams["offeringCoinLocker_ContractName"]), loadABI(contractParams["offeringCoinLocker_ContractName"]), buyerSigner);        
+
+    logger.info(`获取"筹款合约"实例：`);
+    contractFundraising = new hre.ethers.Contract(readSavedContractAddress(contractParams["fundraising_ContractName"]), loadABI(contractParams["fundraising_ContractName"]), buyerSigner);
   });
 
   it("", async function () {
     console.log(``);
-    await printAllValue(contractFundraising, contractMockPayCoin, contractOfferingCoin, buyerSigner);
+    await printAllValue(contractFundraising, contractMockPayCoin, contractOfferingCoin, contractOfferingCoinLocker, buyerSigner);
   });
 
   it("", async function () {
     console.log(``);
     await refundMoney(contractFundraising);
-    await printAllValue(contractFundraising, contractMockPayCoin, contractOfferingCoin, buyerSigner);
+    await printAllValue(contractFundraising, contractMockPayCoin, contractOfferingCoin, contractOfferingCoinLocker, buyerSigner);
   });
 });
 

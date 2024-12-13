@@ -2,8 +2,9 @@
 pragma solidity ^0.8.20;
 
 import "../contracts_openzeppelin/token/ERC20/IERC20.sol";
+//import "hardhat/console.sol";
 
-contract TokenLock {
+contract OfferingCoinLocker {
     address public _owner;
     IERC20 public _tokenOffering;  // 待销售的代币
     
@@ -27,12 +28,12 @@ contract TokenLock {
     }
 
     modifier onlyOwner() {
-        require(msg.sender == _owner, "Not the owner");
+        require(msg.sender == _owner, "OfferingCoinLocker: onlyOwner");
         _;
     }
 
     modifier onlyAuthorized() {
-        require(_authorizedAddresses[msg.sender], "Caller is not authorized");
+        require(_authorizedAddresses[msg.sender], "OfferingCoinLocker: onlyAuthorized");
         _;
     }    
 
@@ -46,37 +47,38 @@ contract TokenLock {
         _authorizedAddresses[addr] = false;
     }    
 
-    // 筹款合约发起"锁仓代币"
+    // "筹款合约"发起"锁仓代币"
     function lockTokens(address user, uint256 amount, uint256 releaseTime) external onlyAuthorized {
         require(releaseTime > block.timestamp, "lockTokens : releaseTime > block.timestamp");
         require(amount > 0, "lockTokens : amount > 0");
 
-        // 将代币转移到锁仓合约
-        _tokenOffering.transfer(address(this), amount);
-
-        // 更新锁仓信息
-        _lockedTokens[user] = LockInfo({
-            amount: amount,
-            releaseTime: releaseTime
-        });
+        // 更新锁仓信息(覆盖)
+        _lockedTokens[user].amount = amount;
+        _lockedTokens[user].releaseTime = releaseTime;
 
         emit TokensLocked(user, amount, releaseTime);
     }
 
-    // 用户发起"释放锁仓，即取回代币"
-    function releaseTokens() external {
-        LockInfo memory lockInfo = _lockedTokens[msg.sender];
-        require(lockInfo.amount > 0, "No locked tokens");
-        require(block.timestamp >= lockInfo.releaseTime, "Tokens are still locked");
+    // "筹款合约"替用户 发起"释放锁仓，即取回代币"
+    function releaseTokens(address user) external onlyAuthorized {
+        LockInfo memory lockInfo = _lockedTokens[user];
+        require(lockInfo.amount > 0, "releaseTokens: No locked tokens");
+        require(block.timestamp >= lockInfo.releaseTime, "releaseTokens: Tokens are still locked");
 
         uint256 amount = lockInfo.amount;
 
         // 清除锁仓记录
-        delete _lockedTokens[msg.sender];
+        delete _lockedTokens[user];
 
         // 将代币转移给用户
-        _tokenOffering.transfer(msg.sender, amount);
+        _tokenOffering.transfer(user, amount);
 
-        emit TokensReleased(msg.sender, amount);
+        emit TokensReleased(user, amount);
+    }
+
+    function getLockInfo(address user) external view returns(uint256, uint256) {
+        LockInfo memory lockInfo = _lockedTokens[user];
+        //console.log("getLockInfo %x -> %d, %d", user, lockInfo.amount, lockInfo.releaseTime);
+        return (lockInfo.amount, lockInfo.releaseTime);
     }
 }

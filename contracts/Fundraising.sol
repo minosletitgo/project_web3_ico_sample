@@ -2,7 +2,8 @@
 pragma solidity ^0.8.20;
 
 import "../contracts_openzeppelin/token/ERC20/IERC20.sol";
-import "hardhat/console.sol";//调试Log，正式版记得注销掉
+import "./OfferingCoinLocker.sol";
+//import "hardhat/console.sol";//调试Log，正式版记得注销掉
 
 /*
     说明：
@@ -24,6 +25,7 @@ contract Fundraising {
     address public _ownerOfTokenOffering;
     IERC20 public _tokenMockPayCoin;    // 使用模拟美元代币(原生以太币的获取太麻烦)
     IERC20 public _tokenOffering;  // 待销售的代币
+    OfferingCoinLocker public _offeringCoinLocker;
 
     enum SaleState { 
         NotStarted, // 未开始
@@ -55,12 +57,12 @@ contract Fundraising {
     event WithdrawMoney(address indexed owner, uint256 moneyAmount);
 
     modifier onlyOwner() {
-        require(msg.sender == _owner, "onlyOwner");
+        require(msg.sender == _owner, "OfferingCoinLocker: onlyOwner");
         _;
     }
 
     modifier onlyNotOwner() {
-        require(msg.sender != _owner, "onlyNotOwner");
+        require(msg.sender != _owner, "OfferingCoinLocker: onlyNotOwner");
         _;
     }    
 
@@ -73,6 +75,7 @@ contract Fundraising {
         address tokenMockPayCoinAddress,
         address tokenOfferingAddress,
         address ownerOfTokenOffering,
+        address offeringCoinLockerAddress,
         uint256 softCap,
         uint256 hardCap,
         uint256 presaleRate,
@@ -93,8 +96,11 @@ contract Fundraising {
         require(ownerOfTokenOffering != address(0), "ownerOfTokenOffering != address(0)");
         _ownerOfTokenOffering = ownerOfTokenOffering;
 
-        require(_tokenOffering.balanceOf(_ownerOfTokenOffering) > 0, "_tokenOffering.balanceOf(_ownerOfTokenOffering) > 0");        
+        require(_tokenOffering.balanceOf(_ownerOfTokenOffering) > 0, "_tokenOffering.balanceOf(_ownerOfTokenOffering) > 0");  
 
+        require(offeringCoinLockerAddress != address(0), "offeringCoinLockerAddress != address(0)");        
+        _offeringCoinLocker = OfferingCoinLocker(offeringCoinLockerAddress);
+        
         _softCap = softCap;
         _hardCap = hardCap;
         _presaleRate = presaleRate;
@@ -164,7 +170,10 @@ contract Fundraising {
         _tokenMockPayCoin.transferFrom(msg.sender, address(this), amount);
 
         // 把用户购入的MMC，转入到锁仓合约
-        //_tokenOffering.transferFrom();
+        _tokenOffering.transferFrom(_ownerOfTokenOffering, address(_offeringCoinLocker), tokensToTransfer);
+        // 更新锁仓信息
+        _offeringCoinLocker.lockTokens(msg.sender, tokensToTransfer, _presaleStartTimeStamp + _presaleDurationSeconds + _publicsaleDurationSeconds + _lockTokenDurationSeconds);
+
 
         _contributions[msg.sender] += amount;
         _tokensPurchased[msg.sender] += tokensToTransfer;
@@ -206,7 +215,7 @@ contract Fundraising {
        emit RefundMoney(msg.sender, amount, tokensToTransfer);
     }
 
-    // 项目方提取筹集的资金
+    // 项目方发起"提款"
     function withdrawMoney() external onlyOwner {
         // 提款，锁仓期才可以
         require(getSaleState() >= SaleState.LockToken, "withdrawMoney: getSaleState() >= SaleState.LockToken");
@@ -221,6 +230,14 @@ contract Fundraising {
         _tokenMockPayCoin.transfer(msg.sender, amount);
 
         emit WithdrawMoney(msg.sender, amount);
+    }
+
+    // 用户发起"释放锁仓币"
+    function releaseTokens() external {
+        // 锁仓期结束，才可以
+        require(getSaleState() == SaleState.Ended, "releaseTokens: getSaleState() == SaleState.Ended");
+
+        _offeringCoinLocker.releaseTokens(msg.sender);
     }
 
     // 查询"本合约持有的筹集资金额度"

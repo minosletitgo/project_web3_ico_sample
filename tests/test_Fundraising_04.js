@@ -54,5 +54,5 @@ describe(" ", function () {
 });
 
 /*
-    npx hardhat test tests/test_Fundraising_03.js --network localHardhat
+    npx hardhat test tests/test_Fundraising_04.js --network localHardhat
 */

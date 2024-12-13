@@ -8,7 +8,7 @@ const { getCurrentUnixTimestampSec, convertUnixTimestampToDataString } = require
 const { printRatio } = require("../scripts/tools/mathHelper");
 const { BigNumber } = require("ethers");
 
-async function printAllValue(contractFundraising, contractMockPayCoin, contractOfferingCoin, oprSigner) {
+async function printAllValue(contractFundraising, contractMockPayCoin, contractOfferingCoin, contractOfferingCoinLocker, oprSigner) {
     logger.info(`查询合约的常规数据`);
     let _presaleStartTimeStamp = await contractFundraising._presaleStartTimeStamp();
     let _publicsaleStartTimeStamp = _presaleStartTimeStamp.add(await contractFundraising._presaleDurationSeconds());
@@ -44,6 +44,11 @@ async function printAllValue(contractFundraising, contractMockPayCoin, contractO
     logger.info(`------------------------------------------------------`);
     logger.info(`${oprSigner.address} contractMockPayCoin.balanceOf -> ${await contractMockPayCoin.balanceOf(oprSigner.address)}`);
     logger.info(`${oprSigner.address} contractOfferingCoin.balanceOf -> ${await contractOfferingCoin.balanceOf(oprSigner.address)}`);
+    logger.info(`------------------------------------------------------`);
+    let resultLockInfo  = await contractOfferingCoinLocker.getLockInfo(oprSigner.address);    
+    logger.info(`${oprSigner.address} contractOfferingCoinLocker.lockAmount -> ${resultLockInfo[0]}`);
+    logger.info(`${oprSigner.address} contractOfferingCoinLocker.lockReleaseTime -> ${resultLockInfo[1]}`);
+    //logger.info(`${oprSigner.address} contractOfferingCoinLocker.lockReleaseTime -> ${convertUnixTimestampToDataString(lockReleaseTime)}`);
   }
   
   async function buyToken(contractFundraising, amount) {
@@ -57,11 +62,16 @@ async function printAllValue(contractFundraising, contractMockPayCoin, contractO
   async function withdrawMoney(contractFundraising) {
     await contractFundraising.withdrawMoney();
   }  
-  
+
+  async function releaseTokens(contractFundraising) {
+    await contractFundraising.releaseTokens();
+  }  
+    
   // 导出函数以供外界调用
   module.exports = {
     printAllValue,
     buyToken,
     refundMoney,
     withdrawMoney,
+    releaseTokens,
   };
