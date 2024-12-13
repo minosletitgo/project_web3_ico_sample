@@ -46,9 +46,9 @@ async function main() {
   await wait(2000);
   await printBlockData();
 
-  logger.info(`准备：为所有用户发动"模拟支付代币"`);
-  //for (let i = 0; i < allSigners.length; i++) {
-  for (let i = 0; i < 3; i++) {
+  logger.info(`准备：为所有用户(刻意不发管理员)发动"模拟支付代币"`);
+  //for (let i = 1; i < allSigners.length; i++) {
+  for (let i = 1; i < 7; i++) {
     const signer = allSigners[i];
     const signerAddress = await signer.getAddress();
     const decimals = await contractMockPayCoin.decimals();

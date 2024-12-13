@@ -57,7 +57,12 @@ contract Fundraising {
     modifier onlyOwner() {
         require(msg.sender == _owner, "onlyOwner");
         _;
-    }       
+    }
+
+    modifier onlyNotOwner() {
+        require(msg.sender != _owner, "onlyNotOwner");
+        _;
+    }    
 
     // modifier inSaleState() {
     //     require(getSaleState() == SaleState.Presale || getSaleState() == SaleState.PublicSale, "Not in Sale");
@@ -127,7 +132,7 @@ contract Fundraising {
     }
 
     // 用户发起"购入代币"
-    function buyToken(uint256 amount) external {
+    function buyToken(uint256 amount) external onlyNotOwner {
         // 售卖还未开始
         if (getSaleState() == SaleState.NotStarted) {
             revert("buyToken SaleState.NotStarted");
@@ -179,9 +184,11 @@ contract Fundraising {
     }
 
     // 用户发起"退款"
-    function refundMoney() external {
+    function refundMoney() external onlyNotOwner {
         // 退款申请，只在公开售卖期之后
         require(getSaleState() > SaleState.PublicSale, "refundMoney : getSaleState() > SaleState.PublicSale");
+        // 筹款额度，未达到软顶
+        require(_raisedAmount < _softCap, "refundMoney : _raisedAmount < _softCap");
 
         // 有款可退
         uint256 amount = _contributions[msg.sender];
@@ -190,18 +197,27 @@ contract Fundraising {
         uint tokensToTransfer = _tokensPurchased[msg.sender];
         require(tokensToTransfer > 0, "refundMoney : tokensToTransfer > 0");
 
-        // 把钱退还给用户
+        // 把"模拟支付代币"退还给用户
        _tokenMockPayCoin.transfer(msg.sender, amount);
+
+        // 更新记录
+       _contributions[msg.sender] -= amount;
 
        emit RefundMoney(msg.sender, amount, tokensToTransfer);
     }
 
     // 项目方提取筹集的资金
     function withdrawMoney() external onlyOwner {
-        require(getSaleState() == SaleState.Ended, "withdrawMoney: getSaleState() == SaleState.Ended");
+        // 提款，锁仓期才可以
+        require(getSaleState() >= SaleState.LockToken, "withdrawMoney: getSaleState() >= SaleState.LockToken");
+        // 筹款额度，达到软顶
+        require(_raisedAmount >= _softCap, "refundMoney : _raisedAmount >= _softCap");
 
+        // 有款可提
         uint256 amount = _tokenMockPayCoin.balanceOf(address(this));
         require(amount > 0, "withdrawMoney : amount > 0");
+
+        // 把"模拟支付代币"转给管理员
         _tokenMockPayCoin.transfer(msg.sender, amount);
 
         emit WithdrawMoney(msg.sender, amount);

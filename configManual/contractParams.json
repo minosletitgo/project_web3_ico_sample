@@ -19,15 +19,15 @@
         "fundraising_Desc": "筹集资金合约",
         "fundraising_ContractName": "Fundraising",
         "fundraising_ContractFileName": "Fundraising.sol",
-        "fundraising_SoftCapValue": 20000,
+        "fundraising_SoftCapValue": 2000,
         "fundraising_SoftCapValueDesc": "筹款软顶值，使用最大单位，如 20000个最大单位",
-        "fundraising_HardCapValue": 200000,
+        "fundraising_HardCapValue": 10000,
         "fundraising_HardCapValueDesc": "筹款硬顶值，使用最大单位，如 200000个最大单位",
         "fundraising_PresaleRate": 25,
         "fundraising_PublicsaleRate": 20,
-        "fundraising_PresaleStartTimeStamp": "2024-12-12 21:56:29",
-        "fundraising_PresaleDurationSeconds": 3600,
-        "fundraising_PublicDurationSeconds": 3600,
+        "fundraising_PresaleStartTimeStamp": "2024-12-13 19:09:41",
+        "fundraising_PresaleDurationSeconds": 10,
+        "fundraising_PublicDurationSeconds": 60,
         "fundraising_LockTokenDurationSeconds": 3600
     }
 }
