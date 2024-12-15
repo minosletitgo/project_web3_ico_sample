@@ -10,7 +10,7 @@ const { BigNumber } = require("ethers");
 const { printAllValue, buyToken, refundMoney } = require("./caller_Fundraising");
 
 describe(" ", function () {
-  logger.info(`等待售卖期开始后，测试"用户退款行为"`);
+  logger.info(`等待售卖期开始后，测试"用户退款行为(依赖于筹款额度未达软顶)"`);
 
   // 获取全局配置
   const contractParams = loadContractParams();
@@ -54,5 +54,5 @@ describe(" ", function () {
 });
 
 /*
-    npx hardhat test tests/test_Fundraising_02.js --network localHardhat
+    npx hardhat test tests/test_02_RefundMoney.js --network localHardhat
 */
