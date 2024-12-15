@@ -10,7 +10,7 @@ const { BigNumber } = require("ethers");
 const { printAllValue, releaseTokens } = require("./caller_Fundraising");
 
 describe(" ", function () {
-  logger.info(`等待锁仓期结束，测试"用户提币行为"`);
+  logger.info(`等待锁仓期结束，测试"用户提币行为(依赖于筹款额度已达软顶)"`);
 
   // 获取全局配置
   const contractParams = loadContractParams();

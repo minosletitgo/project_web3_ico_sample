@@ -2,6 +2,8 @@
 pragma solidity ^0.8.20;
 
 import "../contracts_openzeppelin/token/ERC20/IERC20.sol";
+import "../contracts_openzeppelin/token/ERC20/utils/SafeERC20.sol";
+import "../contracts_openzeppelin/utils/ReentrancyGuard.sol";
 import "./OfferingCoinLocker.sol";
 //import "hardhat/console.sol";//调试Log，正式版记得注销掉
 
@@ -20,7 +22,7 @@ import "./OfferingCoinLocker.sol";
     -> 使用Safe操作，待优化。
 */
 
-contract Fundraising {
+contract Fundraising is ReentrancyGuard{
     address public _owner;
     address public _ownerOfTokenOffering;
     IERC20 public _tokenMockPayCoin;    // 使用模拟美元代币(原生以太币的获取太麻烦)
@@ -106,7 +108,7 @@ contract Fundraising {
         _presaleRate = presaleRate;
         _publicSaleRate = publicSaleRate;
 
-        console.log("presaleStartTimeStamp(%d) > block.timestamp(%d)", presaleStartTimeStamp, block.timestamp);
+        //console.log("presaleStartTimeStamp(%d) > block.timestamp(%d)", presaleStartTimeStamp, block.timestamp);
         require(presaleStartTimeStamp > block.timestamp, "presaleStartTimeStamp > block.timestamp");
         require(presaleDurationSeconds > 0, "presaleDurationSeconds > 0");
         require(publicsaleDurationSeconds > 0, "publicsaleDurationSeconds > 0");
@@ -138,7 +140,7 @@ contract Fundraising {
     }
 
     // 用户发起"购入代币"
-    function buyToken(uint256 amount) external onlyNotOwner {
+    function buyToken(uint256 amount) external onlyNotOwner nonReentrant {
         // 售卖还未开始
         if (getSaleState() == SaleState.NotStarted) {
             revert("buyToken SaleState.NotStarted");
@@ -167,10 +169,10 @@ contract Fundraising {
         require(_tokenOffering.allowance(_ownerOfTokenOffering, address(this)) > tokensToTransfer, "_ownerOfTokenOffering, address(this)) > tokensToTransfer");
         
         // 把MockPayCoin转入本合约
-        _tokenMockPayCoin.transferFrom(msg.sender, address(this), amount);
+        SafeERC20.safeTransferFrom(_tokenMockPayCoin, msg.sender, address(this), amount);
 
         // 把用户购入的MMC，转入到锁仓合约
-        _tokenOffering.transferFrom(_ownerOfTokenOffering, address(_offeringCoinLocker), tokensToTransfer);
+        SafeERC20.safeTransferFrom(_tokenOffering, _ownerOfTokenOffering, address(_offeringCoinLocker), tokensToTransfer);
         // 更新锁仓信息
         _offeringCoinLocker.lockTokens(msg.sender, tokensToTransfer, _presaleStartTimeStamp + _presaleDurationSeconds + _publicsaleDurationSeconds + _lockTokenDurationSeconds);
 
@@ -193,7 +195,7 @@ contract Fundraising {
     }
 
     // 用户发起"退款"
-    function refundMoney() external onlyNotOwner {
+    function refundMoney() external onlyNotOwner nonReentrant {
         // 退款申请，只在公开售卖期之后
         require(getSaleState() > SaleState.PublicSale, "refundMoney : getSaleState() > SaleState.PublicSale");
         // 筹款额度，未达到软顶
@@ -207,7 +209,7 @@ contract Fundraising {
         require(tokensToTransfer > 0, "refundMoney : tokensToTransfer > 0");
 
         // 把"模拟支付代币"退还给用户
-       _tokenMockPayCoin.transfer(msg.sender, amount);
+       SafeERC20.safeTransfer(_tokenMockPayCoin, msg.sender, amount);
 
         // 更新记录
        _contributions[msg.sender] -= amount;
@@ -216,7 +218,7 @@ contract Fundraising {
     }
 
     // 项目方发起"提款"
-    function withdrawMoney() external onlyOwner {
+    function withdrawMoney() external onlyOwner nonReentrant {
         // 提款，锁仓期才可以
         require(getSaleState() >= SaleState.LockToken, "withdrawMoney: getSaleState() >= SaleState.LockToken");
         // 筹款额度，达到软顶
@@ -227,13 +229,13 @@ contract Fundraising {
         require(amount > 0, "withdrawMoney : amount > 0");
 
         // 把"模拟支付代币"转给管理员
-        _tokenMockPayCoin.transfer(msg.sender, amount);
+        SafeERC20.safeTransfer(_tokenMockPayCoin, msg.sender, amount);
 
         emit WithdrawMoney(msg.sender, amount);
     }
 
     // 用户发起"释放锁仓币"
-    function releaseTokens() external {
+    function releaseTokens() external nonReentrant {
         // 锁仓期结束，才可以
         require(getSaleState() == SaleState.Ended, "releaseTokens: getSaleState() == SaleState.Ended");
 

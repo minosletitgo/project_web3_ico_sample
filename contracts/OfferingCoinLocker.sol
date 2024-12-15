@@ -2,6 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "../contracts_openzeppelin/token/ERC20/IERC20.sol";
+import "../contracts_openzeppelin/token/ERC20/utils/SafeERC20.sol";
 //import "hardhat/console.sol";
 
 contract OfferingCoinLocker {
@@ -71,7 +72,7 @@ contract OfferingCoinLocker {
         delete _lockedTokens[user];
 
         // 将代币转移给用户
-        _tokenOffering.transfer(user, amount);
+        SafeERC20.safeTransfer(_tokenOffering, user, amount);
 
         emit TokensReleased(user, amount);
     }

@@ -10,7 +10,7 @@ const { BigNumber } = require("ethers");
 const { printAllValue, withdrawMoney } = require("./caller_Fundraising");
 
 describe(" ", function () {
-  logger.info(`等待售卖期开始后，测试"管理员提款行为"`);
+  logger.info(`等待售卖期开始后，测试"管理员提款行为(依赖于筹款额度已达软顶)"`);
 
   // 获取全局配置
   const contractParams = loadContractParams();
