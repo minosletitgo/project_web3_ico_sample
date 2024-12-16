@@ -1,20 +1,33 @@
 {
     "localHardhat": {
-        "offeringCoin_Desc": "配置准备发行的代币，MaoMao or GouGou or ...",
+        "offeringCoin_Desc": "准备发行的代币，MaoMao or GouGou or ...",
         "offeringCoin_ContractName": "MaoMao",
         "offeringCoin_ContractFileName": "MaoMao.sol",
         "offeringCoin_Name": "MaoMao",
         "offeringCoin_Symbol": "MMT",
         "offeringCoin_TotalSupplyValue": 1e9,
         "offeringCoin_TotalSupplyValueDesc": "总供应量值，使用最大单位，如 10亿个最大单位",
+        "offeringCoin_ApproveFundraisingValue": 1e4,
+        "offeringCoin_ApproveFundraisingValueDesc": "授予给筹款合约的量，使用最大单位，如 1万个最大单位",
         "offeringCoin_Decimals": 18,
 
-        "mockPayCoin_Desc": "配置准备作为模拟支付的代币，Mock_USDT or ...",
+        "mockPayCoin_Desc": "准备作为模拟支付的代币，Mock_USDT or ...",
         "mockPayCoin_ContractName": "Mock_USDT",
         "mockPayCoin_ContractFileName": "Mock_USDT.sol",
         "mockPayCoin_Name": "Mock_USDT",
         "mockPayCoin_Symbol": "M_USDT",
         "mockPayCoin_Decimals": 6,
+
+        "mockExchangeFactory_Desc": "模拟交易所的代币工厂",
+        "mockExchangeFactory_ContractName": "MockExchangeFactory",
+        "mockExchangeFactory_ContractFileName": "MockExchangeFactory.sol",
+
+        "mockExchangeRouter_Desc": "模拟交易所的路由",
+        "mockExchangeRouter_ContractName": "MockExchangeRouter",
+        "mockExchangeRouter_ContractFileName": "MockExchangeRouter.sol",        
+
+        "mockExchange_Pair_TokenA_CreateAmount": 200000,
+        "mockExchange_Pair_TokenB_CreateAmount": 10000,
 
         "fundraising_Desc": "筹集资金合约",
         "fundraising_ContractName": "Fundraising",
@@ -25,7 +38,7 @@
         "fundraising_HardCapValueDesc": "筹款硬顶值，使用最大单位，如 200000个最大单位",
         "fundraising_PresaleRate": 25,
         "fundraising_PublicsaleRate": 20,
-        "fundraising_PresaleStartTimeStamp": "2024-12-15 18:36:11",
+        "fundraising_PresaleStartTimeStamp": "2024-12-16 20:18:11",
         "fundraising_PresaleDurationSeconds": 10,
         "fundraising_PublicDurationSeconds": 60,
         "fundraising_LockTokenDurationSeconds": 30,

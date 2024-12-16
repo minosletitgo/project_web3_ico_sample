@@ -79,6 +79,14 @@ npm install @chainlink/contracts
 npm install date-fns@3.6.0
 ```
 
+* 安装Uniswap V2
+```
+npm view @uniswap/v2-core versions
+npm install @uniswap/v2-core@1.0.1
+
+npm view @uniswap/v2-periphery versions
+npm install @uniswap/v2-periphery@1.1.0-beta.0
+```
 ---------------------------------------------------------------------------------
 
 
@@ -92,6 +100,7 @@ npm install date-fns@3.6.0
 * 编译：
 ```
 npx hardhat compile
+npx hardhat clean
 ```
 
 * 部署：启动且使用本地hardhat开发节点(会生成20个账户)：

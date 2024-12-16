@@ -112,6 +112,8 @@ async function printBlockData() {
   logger.info(`-> ${currentBlock.timestamp} | ${convertUnixTimestampToDataString(currentBlock.timestamp)} -> currentBlock : ${currentBlock.number}`);
   logger.info(`-> ${previousBlock.timestamp} | ${convertUnixTimestampToDataString(previousBlock.timestamp)} -> previousBlock : ${previousBlock.number}`);
   logger.info(`-> ${currentUnixTimestampSec} | ${convertUnixTimestampToDataString(currentUnixTimestampSec)} -> currentUnixTimestampSec`);
+
+  return currentBlock;
 }
 
 module.exports = {
