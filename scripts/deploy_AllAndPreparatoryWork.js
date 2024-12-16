@@ -62,7 +62,7 @@ async function main() {
       mintAmount = BigInt(100000000 * 10 ** decimals);
     } else {
       // 普通用户意思一下，别给太多
-      mintAmount = BigInt(getRandomInt(500, 2000) * 10 ** decimals);
+      mintAmount = BigInt(getRandomInt(500, 1000) * 10 ** decimals);
     }
     await contractMockPayCoin.mint(signerAddress, mintAmount);
     logger.info(`${hre.network.name} -> ${signerAddress} -> mintAmount -> ${contractParams["mockPayCoin_Name"]} : ${mintAmount}`);
@@ -111,7 +111,7 @@ async function main() {
 
   logger.info(`准备：管理员授予"交易所路由合约"一定的新发行代币额度(${amountTokenA_OnCreate})`);
   await contractOfferingCoin.approve(contractMockExchangeRouter.address, amountTokenA_OnCreate);
-
+  
   let allowanceA = await contractOfferingCoin.allowance(adminSigner.address, contractMockExchangeRouter.address);
   logger.info(`allowanceA = ${allowanceA}`);
   logger.info(`balanceOfA = ${await contractOfferingCoin.balanceOf(adminSigner.address)}`);

@@ -22,7 +22,7 @@ contract MaoMao is IERC20, Ownable {
         _symbol = symbol;
         _totalSupply = totalSupplyValue * 10 ** decimal;
         _decimal = decimal;
-        
+
         // 固定总供应量，直接给管理员
         _balanceOf[msg.sender] = _totalSupply;
 

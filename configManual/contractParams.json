@@ -24,10 +24,13 @@
 
         "mockExchangeRouter_Desc": "模拟交易所的路由",
         "mockExchangeRouter_ContractName": "MockExchangeRouter",
-        "mockExchangeRouter_ContractFileName": "MockExchangeRouter.sol",        
+        "mockExchangeRouter_ContractFileName": "MockExchangeRouter.sol",
 
-        "mockExchange_Pair_TokenA_CreateAmount": 200000,
-        "mockExchange_Pair_TokenB_CreateAmount": 10000,
+        "mockExchangePair_Desc": "模拟交易所的交易对",
+        "mockExchangePair_ContractName": "UniswapV2Pair",
+
+        "mockExchange_Pair_TokenA_CreateAmount": 2000,
+        "mockExchange_Pair_TokenB_CreateAmount": 100,
 
         "fundraising_Desc": "筹集资金合约",
         "fundraising_ContractName": "Fundraising",
@@ -38,7 +41,7 @@
         "fundraising_HardCapValueDesc": "筹款硬顶值，使用最大单位，如 200000个最大单位",
         "fundraising_PresaleRate": 25,
         "fundraising_PublicsaleRate": 20,
-        "fundraising_PresaleStartTimeStamp": "2024-12-16 20:18:11",
+        "fundraising_PresaleStartTimeStamp": "2024-12-17 20:18:11",
         "fundraising_PresaleDurationSeconds": 10,
         "fundraising_PublicDurationSeconds": 60,
         "fundraising_LockTokenDurationSeconds": 30,
