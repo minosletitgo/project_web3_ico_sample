@@ -74,6 +74,16 @@ async function printPairAllValue(contractTargetPair, allSigner) {
   }
 }
 
+async function addLiquidity(contractRouter, tokenA, tokenB, amountA, amountB, oprSigner, deadline) {
+  await contractRouter.addLiquidity(
+    tokenA, tokenB,
+    amountA, amountB, 
+    1, 1,
+    oprSigner.address,
+    deadline
+  );
+}
+
 // 导出函数以供外界调用
 module.exports = {
   printAllValue,
@@ -82,4 +92,5 @@ module.exports = {
   withdrawMoney,
   releaseTokens,
   printPairAllValue,
+  addLiquidity,
 };

@@ -23,8 +23,13 @@ import "./OfferingCoinLocker.sol";
 contract Fundraising is ReentrancyGuard{
     address public _owner;
     address public _ownerOfTokenOffering;
+
     IERC20 public _tokenMockPayCoin;    // 使用模拟美元代币(原生以太币的获取太麻烦)
-    IERC20 public _tokenOffering;  // 待销售的代币
+    uint8 public _decimalsOfMockPayCoin;
+
+    IERC20 public _tokenOfferingCoin;  // 待销售的代币
+    uint8 public _decimalsOfOfferingCoin;
+
     OfferingCoinLocker public _offeringCoinLocker;
 
     enum SaleState { 
@@ -73,7 +78,9 @@ contract Fundraising is ReentrancyGuard{
 
     constructor(
         address tokenMockPayCoinAddress,
-        address tokenOfferingAddress,
+        uint8 decimalsOfMockPayCoin,
+        address tokenOfferingCoinAddress,
+        uint8 decimalsOfOfferingCoin,
         address ownerOfTokenOffering,
         address offeringCoinLockerAddress,
         uint256 softCap,
@@ -89,14 +96,18 @@ contract Fundraising is ReentrancyGuard{
 
         require(tokenMockPayCoinAddress != address(0), "tokenMockPayCoinAddress != address(0)");
         _tokenMockPayCoin = IERC20(tokenMockPayCoinAddress);
+        require(decimalsOfMockPayCoin > 0, "decimalsOfMockPayCoin > 0");
 
-        require(tokenOfferingAddress != address(0), "tokenOfferingAddress != address(0)");
-        _tokenOffering = IERC20(tokenOfferingAddress);
+        require(tokenOfferingCoinAddress != address(0), "tokenOfferingAddress != address(0)");
+        _tokenOfferingCoin = IERC20(tokenOfferingCoinAddress);
+        require(decimalsOfOfferingCoin > 0, "decimalsOfOfferingCoin > 0");
+        
+        require(decimalsOfOfferingCoin > decimalsOfMockPayCoin, "decimalsOfOfferingCoin > decimalsOfMockPayCoin");
 
         require(ownerOfTokenOffering != address(0), "ownerOfTokenOffering != address(0)");
         _ownerOfTokenOffering = ownerOfTokenOffering;
 
-        require(_tokenOffering.balanceOf(_ownerOfTokenOffering) > 0, "_tokenOffering.balanceOf(_ownerOfTokenOffering) > 0");  
+        require(_tokenOfferingCoin.balanceOf(_ownerOfTokenOffering) > 0, "_tokenOffering.balanceOf(_ownerOfTokenOffering) > 0");  
 
         require(offeringCoinLockerAddress != address(0), "offeringCoinLockerAddress != address(0)");        
         _offeringCoinLocker = OfferingCoinLocker(offeringCoinLockerAddress);
@@ -154,23 +165,25 @@ contract Fundraising is ReentrancyGuard{
 
         // 前端，必须先取得用户的授权，才能操控MockPayCoin
         require(amount > 0, "buyToken amount > 0");
-
+        
         uint256 tokensToTransfer = 0;        
         if (getSaleState() != SaleState.Presale) {
-            tokensToTransfer = amount * _presaleRate;
+            // 1 * 10 ** decimals_MockPayCoin -> 20 * 10 ** decimals_OfferingCoin
+            tokensToTransfer = amount * _presaleRate * 10 ** (_decimalsOfOfferingCoin - _decimalsOfMockPayCoin);
         }
         else {
-            tokensToTransfer = amount * _publicSaleRate;
+            // 1 * 10 ** decimals_MockPayCoin -> 25 * 10 ** decimals_OfferingCoin
+            tokensToTransfer = amount * _publicSaleRate * 10 ** (_decimalsOfOfferingCoin - _decimalsOfMockPayCoin);
         }
 
         // 确保本合约有足额的MMC，可供分配
-        require(_tokenOffering.allowance(_ownerOfTokenOffering, address(this)) > tokensToTransfer, "_ownerOfTokenOffering, address(this)) > tokensToTransfer");
+        require(_tokenOfferingCoin.allowance(_ownerOfTokenOffering, address(this)) > tokensToTransfer, "_ownerOfTokenOffering, address(this)) > tokensToTransfer");
         
         // 把MockPayCoin转入本合约
         SafeERC20.safeTransferFrom(_tokenMockPayCoin, msg.sender, address(this), amount);
 
         // 把用户购入的MMC，转入到锁仓合约
-        SafeERC20.safeTransferFrom(_tokenOffering, _ownerOfTokenOffering, address(_offeringCoinLocker), tokensToTransfer);
+        SafeERC20.safeTransferFrom(_tokenOfferingCoin, _ownerOfTokenOffering, address(_offeringCoinLocker), tokensToTransfer);
         // 更新锁仓信息
         _offeringCoinLocker.lockTokens(msg.sender, tokensToTransfer, _presaleStartTimeStamp + _presaleDurationSeconds + _publicsaleDurationSeconds + _lockTokenDurationSeconds);
 
@@ -247,7 +260,7 @@ contract Fundraising is ReentrancyGuard{
 
     // 查询"外部管理员授权给本合约的代币额度"
     function getOfferingCoinAllowance() external view returns (uint256) {
-        return _tokenOffering.allowance(_ownerOfTokenOffering, address(this));
+        return _tokenOfferingCoin.allowance(_ownerOfTokenOffering, address(this));
     }
 
 

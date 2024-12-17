@@ -25,7 +25,7 @@ module.exports = {
             enabled: true,
             runs: 200,
           },
-        },
+        },        
       },
       {
         version: "0.6.6",
@@ -43,9 +43,10 @@ module.exports = {
             enabled: true,
             runs: 200,
           },
+          viaIR: true // 启用通过IR编译
         },
       },
-    ],
+    ],    
   },
   networks: {
     localHardhat: {

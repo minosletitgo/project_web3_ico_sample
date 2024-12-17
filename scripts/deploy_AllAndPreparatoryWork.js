@@ -31,7 +31,7 @@ async function main() {
   );
   await contractOfferingCoin.deployed();
   saveContractAddress(contractParams["offeringCoin_ContractName"], contractOfferingCoin.address);
-
+  logger.info(`管理员持有"新发行代币"的额度为(${await contractOfferingCoin.balanceOf(adminSigner.address)})`);
   ///////////////////////////////////////////////////////////////////////////////////////////////////////
   await wait(1200);
   await printBlockData();
@@ -55,7 +55,7 @@ async function main() {
   for (let i = 0; i < 5; i++) {
     const signer = allSigners[i];
     const signerAddress = await signer.getAddress();
-    const decimals = await contractMockPayCoin.decimals();
+    const decimals = contractParams["mockPayCoin_Decimals"];
     let mintAmount = 0;
     if (i == 0) {
       // 管理员必须足够多
@@ -165,7 +165,9 @@ async function main() {
   });
   const contractFundraising = await FundraisingFactory.connect(adminSigner).deploy(
     readSavedContractAddress(contractParams["mockPayCoin_ContractName"]),
+    contractParams["mockPayCoin_Decimals"],
     readSavedContractAddress(contractParams["offeringCoin_ContractName"]),
+    contractParams["offeringCoin_Decimals"],
     adminSigner.address,
     contractOfferingCoinLocker.address,
     BigInt(contractParams["fundraising_SoftCapValue"] * 10 ** contractParams["mockPayCoin_Decimals"]),

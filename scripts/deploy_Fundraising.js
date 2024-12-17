@@ -21,7 +21,9 @@ async function main() {
   // 完整的填写"筹款合约"的构造参数
   const fundraising = await FundraisingFactory.deploy(
     readSavedContractAddress(contractParams["mockPayCoin_ContractName"]),
+    contractParams["mockPayCoin_Decimals"],
     readSavedContractAddress(contractParams["offeringCoin_ContractName"]),
+    contractParams["offeringCoin_Decimals"],
     deployer.address,
     contractParams["fundraising_SoftCapValue"] * 10 ** contractParams["mockPayCoin_Decimals"],
     contractParams["fundraising_HardCapValue"] * 10 ** contractParams["mockPayCoin_Decimals"],
