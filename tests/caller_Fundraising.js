@@ -8,6 +8,16 @@ const { getCurrentUnixTimestampSec, convertUnixTimestampToDataString } = require
 const { printRatio } = require("../scripts/tools/mathHelper");
 const { BigNumber } = require("ethers");
 
+async function executeBlockRunner(contractBlockRunner, needBlockCount) {
+  // 执行"区块步数模拟器"
+  logger.info(`executeBlockRunner...`);
+  if (needBlockCount > 0) {
+    for (let i = 0; i < needBlockCount; i++) {
+      await contractBlockRunner.updateTimestamp();
+    }
+  }
+}
+
 async function printAllValue(contractFundraising, contractMockPayCoin, contractOfferingCoin, contractOfferingCoinLocker, oprSigner) {
   logger.info(`查询合约的常规数据`);
   let _presaleStartTimeStamp = await contractFundraising._presaleStartTimeStamp();
@@ -84,13 +94,20 @@ async function addLiquidity(contractRouter, tokenA, tokenB, amountA, amountB, op
   );
 }
 
-async function printFarmingAllValue(contractFarming, pId, oprSigner) {
-  logger.info(`contractFarming.balanceOfRewardToken(${await contractFarming.balanceOfRewardToken()})`);
-  logger.info(`contractFarming.pendingShowRewardTokenAmount(${await contractFarming.pendingShowRewardTokenAmount(pId, oprSigner.address)})`);
+async function printFarmingAllValue(contractFarming, pId, allSigners) {
+  logger.info(`contractFarming.balanceOfRewardToken() = ${await contractFarming.balanceOfRewardToken()}`);
+  logger.info(`contractFarming.m_startBlockNum() = ${await contractFarming.m_startBlockNum()}`);
+  logger.info(`contractFarming.m_endBlockNum() = ${await contractFarming.m_endBlockNum()}`);
+
+  for (let i = 0; i < allSigners.length; i++) {
+    let singleSigner = allSigners[i];    
+    logger.info(`contractFarming.pendingShowRewardTokenAmount(${pId}, ${singleSigner.address}) = ${await contractFarming.pendingShowRewardTokenAmount(pId, singleSigner.address)}`);
+  }
 }
 
 // 导出函数以供外界调用
 module.exports = {
+  executeBlockRunner,
   printAllValue,
   buyToken,
   refundMoney,
@@ -98,5 +115,5 @@ module.exports = {
   releaseTokens,
   printPairAllValue,
   addLiquidity,
-  printFarmingAllValue,
+  printFarmingAllValue,  
 };

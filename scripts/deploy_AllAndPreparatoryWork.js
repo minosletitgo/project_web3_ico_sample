@@ -21,6 +21,14 @@ async function main() {
 
   await printBlockData();
 
+  logger.info(`准备：部署"区块步数模拟器"`);
+  const BlockRunnerFactory = await ethers.getContractFactory(contractParams["blockRunner_ContractName"], {
+    contractPath: "./contracts/" + contractParams["blockRunner_ContractFileName"],
+  });
+  const contractBlockRunner = await BlockRunnerFactory.connect(adminSigner).deploy();
+  await contractBlockRunner.deployed();
+  saveContractAddress(contractParams["blockRunner_ContractName"], contractBlockRunner.address);  
+
   logger.info(`准备：部署"发行新代币"(内置为管理员发币)`);
   const OfferingCoinFactory = await ethers.getContractFactory(contractParams["offeringCoin_ContractName"], {
     contractPath: "./contracts/" + contractParams["offeringCoin_ContractFileName"],

@@ -1,5 +1,9 @@
 {
     "localHardhat": {
+        "blockRunner_Desc": "区块模拟合约",
+        "blockRunner_ContractName": "BlockRunner",
+        "blockRunner_ContractFileName": "BlockRunner.sol",
+
         "offeringCoin_Desc": "准备发行的代币，MaoMao or GouGou or ...",
         "offeringCoin_ContractName": "MaoMao",
         "offeringCoin_ContractFileName": "MaoMao.sol",
