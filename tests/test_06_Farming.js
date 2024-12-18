@@ -66,7 +66,7 @@ describe(" ", function () {
     logger.info(`获取"农场合约"实例：`);
     contractFarming = new hre.ethers.Contract(readSavedContractAddress(contractParams["farming_ContractName"]), loadABI(contractParams["farming_ContractName"]), buyerSigner);
 
-    await wait(1200);
+    await wait(1000);
   });
 
   it("", async function () {
@@ -74,7 +74,7 @@ describe(" ", function () {
 
     currentBlock = await printBlockData();
 
-    await wait(1200);
+    await wait(1000);
     await printFarmingAllValue(contractFarming, 0, allSigners);
 
     let lpTokenAmount = await contractMockExchangePair.balanceOf(buyerSigner.address);
@@ -86,12 +86,12 @@ describe(" ", function () {
       logger.info(`用户，向"农场合约"授予凭证代币，额度：( ${lpTokenAmountForFarming })`);
       await contractMockExchangePair.approve(contractFarming.address, lpTokenAmountForFarming);
       
-      await wait(1200);
+      await wait(1000);
   
       logger.info(`用户，向"农场合约"存入凭证代币，额度：( ${lpTokenAmountForFarming} )`);
       await contractFarming.deposit(0, lpTokenAmountForFarming);
   
-      await wait(1200);
+      await wait(1000);
       await printFarmingAllValue(contractFarming, 0, allSigners);
     }
   });

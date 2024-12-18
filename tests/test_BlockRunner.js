@@ -29,12 +29,12 @@ describe(" ", function () {
     await printBlockData();    
 
     await contract.updateTimestamp();
-    await wait(1200);
+    await wait(1000);
 
     await printBlockData();    
 
     await contract.updateTimestamp();
-    await wait(1200);
+    await wait(1000);
 
     await printBlockData();    
   });

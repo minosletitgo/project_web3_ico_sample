@@ -62,7 +62,7 @@ describe(" ", function () {
     contractMockExchangePair = new hre.ethers.Contract(addressMockExchangePair, loadABI(contractParams["mockExchangePair_ContractName"]), buyerSigner);
     logger.info(`contractMockExchangePair.address = ${contractMockExchangePair.address}`);
 
-    await wait(1200);
+    await wait(1000);
 
     mintAmountMockPayCoin = BigInt(getRandomInt(100, 1000) * 10 ** contractParams["mockPayCoin_Decimals"]);
     //mintAmountMockPayCoin = 1000;

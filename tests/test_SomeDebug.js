@@ -27,7 +27,7 @@ describe(" ", function () {
     contractMockPayCoin = new hre.ethers.Contract(readSavedContractAddress(contractParams["mockPayCoin_ContractName"]), loadABI(contractParams["mockPayCoin_ContractName"]), adminSigner);
     contractMockExchangeRouter = new hre.ethers.Contract(readSavedContractAddress(contractParams["mockExchangeRouter_ContractName"]), loadABI(contractParams["mockExchangeRouter_ContractName"]), adminSigner);
 
-    await wait(1200);
+    await wait(1000);
     currentBlock = await printBlockData();
   });
 
