@@ -48,6 +48,11 @@
 
         "offeringCoinLocker_Desc": "锁仓合约",
         "offeringCoinLocker_ContractName": "OfferingCoinLocker",
-        "offeringCoinLocker_ContractFileName": "OfferingCoinLocker.sol"
+        "offeringCoinLocker_ContractFileName": "OfferingCoinLocker.sol",
+
+        "farming_Desc": "流动性挖矿农场合约",
+        "farming_ContractName": "Farming",
+        "farming_ContractFileName": "Farming.sol",
+        "farming_InitOfferingCoinAmount": 1e3
     }
 }

@@ -84,6 +84,11 @@ async function addLiquidity(contractRouter, tokenA, tokenB, amountA, amountB, op
   );
 }
 
+async function printFarmingAllValue(contractFarming, pId, oprSigner) {
+  logger.info(`contractFarming.balanceOfRewardToken(${await contractFarming.balanceOfRewardToken()})`);
+  logger.info(`contractFarming.pendingShowRewardTokenAmount(${await contractFarming.pendingShowRewardTokenAmount(pId, oprSigner.address)})`);
+}
+
 // 导出函数以供外界调用
 module.exports = {
   printAllValue,
@@ -93,4 +98,5 @@ module.exports = {
   releaseTokens,
   printPairAllValue,
   addLiquidity,
+  printFarmingAllValue,
 };

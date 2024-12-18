@@ -7,6 +7,8 @@ import "../contracts_openzeppelin/access/Ownable.sol";
 import "./utils/SimpleSafeMath.sol";
 import "../contracts/myTokens/MaoMao.sol";
 
+import "hardhat/console.sol";
+
 /*
     0x1DaeD74ed1dD7C9Dabbe51361ac90A69d851234D
     2020-09-09 - MasterChef - 生鱼片农场合约

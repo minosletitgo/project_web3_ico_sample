@@ -17,6 +17,8 @@ async function main() {
   const adminSigner = allSigners[0];
   const contractParams = loadContractParams();
 
+  let currentBlock;
+
   await printBlockData();
 
   logger.info(`准备：部署"发行新代币"(内置为管理员发币)`);
@@ -126,7 +128,7 @@ async function main() {
   logger.info(`balanceOfB = ${await contractMockPayCoin.balanceOf(adminSigner.address)}`);
 
   await wait(1200);
-  let currentBlock = await printBlockData();
+  currentBlock = await printBlockData();
 
   logger.info(`准备：使用"模拟交易所路由"添加流动性(即，首次会创建交易对)`);
 
@@ -143,8 +145,48 @@ async function main() {
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////
   await wait(1200);
-  await printBlockData();
+  currentBlock = await printBlockData();
   ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  logger.info(`准备：部署"流动性挖矿-农场`);
+  const Farming = await ethers.getContractFactory(contractParams["farming_ContractName"], {
+    contractPath: "./contracts/" + contractParams["farming_ContractFileName"],
+  });
+  let rewardAmoutPerBlock = 1000;
+  let startRewardBlock = currentBlock.number + 10;
+  let endRewardBlock = startRewardBlock + 3000;
+  const contractFarming = await Farming.connect(adminSigner).deploy(
+    contractOfferingCoin.address,
+    rewardAmoutPerBlock,
+    startRewardBlock,
+    endRewardBlock
+  );
+  await contractFarming.deployed();
+  saveContractAddress(contractParams["farming_ContractName"], contractFarming.address);  
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+  await wait(1200);
+  await printBlockData();
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////  
+
+  logger.info(`拿到"交易对"，为农场添加流动池`);
+  const addressMockExchangePair = await contractMockExchangeFactory.getPair(contractMockPayCoin.address, contractOfferingCoin.address);
+  let farmingRewardAllocPoint = 100;
+  await contractFarming.addPool(farmingRewardAllocPoint, addressMockExchangePair, true);
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+  await wait(1200);
+  await printBlockData();
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////    
+
+  const offeringCoinToFarmingAmount = BigInt(contractParams["farming_InitOfferingCoinAmount"]) * BigInt(10 ** contractParams["offeringCoin_Decimals"]);
+  logger.info(`管理员，向农场合约转入足额(${offeringCoinToFarmingAmount})的发行代币，用于挖矿奖励用户`);
+  await contractOfferingCoin.transfer(contractFarming.address, offeringCoinToFarmingAmount);
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////
+  await wait(1200);
+  await printBlockData();
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////  
 
   logger.info(`准备：部署"锁仓合约"`);
   const OfferingCoinLocker = await ethers.getContractFactory(contractParams["offeringCoinLocker_ContractName"], {
@@ -196,7 +238,7 @@ async function main() {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
   let approveOfferingCoin = BigInt(contractParams["offeringCoin_ApproveFundraisingValue"]) * BigInt(10 ** contractParams["offeringCoin_Decimals"]);
-  logger.info(`"资金管理员"授权"筹款合约"，足额(供应量有这么多:${approveOfferingCoin})的"新发行代币"：`);
+  logger.info(`"资金管理员"授权"筹款合约"，足额( ${approveOfferingCoin} )的"新发行代币"：`);
   await contractOfferingCoin.approve(contractFundraising.address, approveOfferingCoin);
 }
 
