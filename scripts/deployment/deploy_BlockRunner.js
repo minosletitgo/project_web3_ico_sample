@@ -1,8 +1,8 @@
 const { ethers } = require("hardhat");
-const logger = require("./tools/logger");
-const { saveContractAddress } = require("./tools/contractAddressLoader");
-const { loadContractParams } = require("./tools/configReader");
-const { convertDataStringToUnixTimestamp } = require("./tools/timeHelper");
+const logger = require("../tools/logger");
+const { saveContractAddress } = require("../tools/contractAddressLoader");
+const { loadContractParams } = require("../tools/configReader");
+const { convertDataStringToUnixTimestamp } = require("../tools/timeHelper");
 
 
 async function main() { 
@@ -38,5 +38,5 @@ main()
   });
 
 /*
-      npx hardhat run .\scripts\deploy_BlockRunner.js --network localHardhat
+      npx hardhat run .\scripts\deployment\deploy_BlockRunner.js --network localHardhat
 */

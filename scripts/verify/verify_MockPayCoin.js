@@ -1,10 +1,10 @@
 const { ethers, run, network } = require("hardhat");
 const { ethers } = require("hardhat");
-const logger = require("./tools/logger");
-const { loadContractParams } = require("../scripts/tools/configReader");
+const logger = require("../tools/logger");
+const { loadContractParams } = require("../tools/configReader");
 const {
   readSavedContractAddress,
-} = require("../scripts/tools/contractAddressLoader");
+} = require("../tools/contractAddressLoader");
 
 // 在你的部署脚本中
 async function main() {
@@ -40,5 +40,5 @@ main()
   });
 
 /*
-    npx hardhat run .\scripts\verify_MockPayCoin.js --network sepolia
-  */
+    npx hardhat run .\scripts\verify\verify_MockPayCoin.js --network sepolia
+*/

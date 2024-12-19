@@ -6,7 +6,7 @@ const path = require("path");
 // 定义JSON配置文件的位置
 const ADDRESS_FILE_PATH = path.join(
   __dirname,
-  "../../deployGenerated/contract-addresses.json"
+  "../deployGenerated/contract-addresses.json"
 );
 
 // 自动创建目录文件夹

@@ -1,7 +1,7 @@
 const { ethers } = require("hardhat");
-const logger = require("./tools/logger");
-const { loadContractParams } = require("./tools/configReader");
-const { saveContractAddress } = require("./tools/contractAddressLoader");
+const logger = require("../tools/logger");
+const { loadContractParams } = require("../tools/configReader");
+const { saveContractAddress } = require("../tools/contractAddressLoader");
 
 async function main() {
   // 获取部署者
@@ -45,5 +45,5 @@ main()
   });
 
 /*
-      npx hardhat run .\scripts\deploy_MockPayCoin.js --network localHardhat
+      npx hardhat run .\scripts\deployment\deploy_MockPayCoin.js --network localHardhat
 */

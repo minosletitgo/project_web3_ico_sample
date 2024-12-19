@@ -1,8 +1,8 @@
 const { ethers } = require("hardhat");
-const logger = require("./tools/logger");
-const { loadContractParams } = require("./tools/configReader");
-const { saveContractAddress } = require("./tools/contractAddressLoader");
-const { getRandomInt } = require("../scripts/tools/mathHelper");
+const logger = require("../tools/logger");
+const { loadContractParams } = require("../tools/configReader");
+const { saveContractAddress } = require("../tools/contractAddressLoader");
+const { getRandomInt } = require("../tools/mathHelper");
 
 async function main() {
   // 获取部署者
@@ -47,5 +47,5 @@ main()
   });
 
 /*
-      npx hardhat run .\scripts\deploy_OfferingCoin.js --network localHardhat
+      npx hardhat run .\scripts\deployment\deploy_OfferingCoin.js --network localHardhat
 */

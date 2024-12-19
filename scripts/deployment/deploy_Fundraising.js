@@ -1,8 +1,8 @@
 const { ethers } = require("hardhat");
-const logger = require("./tools/logger");
-const { loadContractParams } = require("./tools/configReader");
-const { saveContractAddress, readSavedContractAddress } = require("./tools/contractAddressLoader");
-const { convertDataStringToUnixTimestamp } = require("./tools/timeHelper");
+const logger = require("../tools/logger");
+const { loadContractParams } = require("../tools/configReader");
+const { saveContractAddress, readSavedContractAddress } = require("../tools/contractAddressLoader");
+const { convertDataStringToUnixTimestamp } = require("../tools/timeHelper");
 
 async function main() {
   const [deployer] = await ethers.getSigners();
@@ -53,5 +53,5 @@ main()
   });
 
 /*
-      npx hardhat run .\scripts\deploy_Fundraising.js --network localHardhat
+      npx hardhat run .\scripts\deployment\deploy_Fundraising.js --network localHardhat
 */

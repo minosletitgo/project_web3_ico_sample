@@ -6,7 +6,7 @@ const path = require("path");
 // 定义合约的参数配置
 const PARAMS_CONFIG_FILE_PATH = path.join(
   __dirname,
-  "../../configManual/contractParams.json"
+  "../configs/contractParams.json"
 );
 
 function loadContractParams() {

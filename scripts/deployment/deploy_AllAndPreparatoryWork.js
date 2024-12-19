@@ -1,9 +1,9 @@
 const { ethers } = require("hardhat");
-const logger = require("./tools/logger");
-const { loadContractParams } = require("./tools/configReader");
-const { saveContractAddress, readSavedContractAddress } = require("./tools/contractAddressLoader");
-const { getCurrentUnixTimestampSec, convertDataStringToUnixTimestamp, printBlockData } = require("./tools/timeHelper");
-const { getRandomInt } = require("../scripts/tools/mathHelper");
+const logger = require("../tools/logger");
+const { loadContractParams } = require("../tools/configReader");
+const { saveContractAddress, readSavedContractAddress } = require("../tools/contractAddressLoader");
+const { getCurrentUnixTimestampSec, convertDataStringToUnixTimestamp, printBlockData } = require("../tools/timeHelper");
+const { getRandomInt } = require("../tools/mathHelper");
 
 const util = require("util");
 const wait = util.promisify(setTimeout);
@@ -258,5 +258,5 @@ main()
   });
 
 /*
-    npx hardhat run .\scripts\deploy_AllAndPreparatoryWork.js --network localHardhat
+    npx hardhat run .\scripts\deployment\deploy_AllAndPreparatoryWork.js --network localHardhat
 */
