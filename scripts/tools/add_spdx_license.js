@@ -41,7 +41,7 @@ console.log('SPDX license identifier added to all specified files.');
 
 
 /*
-    project_web3_test_ico/
+    project_web3_ico_sample/
     ├─ node_modules/
     ├─ scripts/
         ├─ tools/
@@ -49,6 +49,6 @@ console.log('SPDX license identifier added to all specified files.');
     ├─ package.json
   
     由于UniswapV2的代码，使用的Solidity版本比较久远，有一些额外错误，这里简单处理一下(补充许可证描述)
-    
+
     node scripts\tools\add_spdx_license.js
 */

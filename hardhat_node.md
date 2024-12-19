@@ -1,4 +1,4 @@
-PS F:\project_web3\project_contract_development_more_tests\project_web3_test_ico> npx hardhat node
+PS F:\project_web3\project_contract_development_more_tests\project_web3_ico_sample> npx hardhat node
 Started HTTP and WebSocket JSON-RPC server at http://127.0.0.1:8545/
 
 Accounts
